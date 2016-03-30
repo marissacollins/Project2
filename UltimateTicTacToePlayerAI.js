@@ -22,15 +22,48 @@
 					[0,0,0],
 					[0,0,0]];
 	 
+	 var checkVal;
+	 
 	//Check the value of possible moves in game x,y
-	for(var i = 0, i < 3, i++){ //Check rows (x)
-		for (var j = 0, j < 3, j++){ //Check columns (y)
+	for(var i = 0; i < 3; i++){ //Check rows (x)
+		for (var j = 0; j < 3; j++){ //Check columns (y)
+			checkVal = i + "." + j;
 			if(selected[outerX,outerY,i,j] == 1  || selected[outerX,outerY,i,j] == 2){ //If the space is taken, set the value to 0
 				valTable[i,j] = 0;
 			}
 			else{ //Otherwise, calculate the value
-				switch(){
-					
+				switch(checkVal){
+					case "0.0": //Calculate top-left value
+						for (var x = 0; x < 3; x++){
+							for (var y = 0; y < 3; y++){
+								
+							}
+						}
+						break;
+					case "0.1": //Calculate top-middle value
+						
+						break;
+					case "0.2": //Calculate top-right value
+						
+						break;
+					case "1.0": //Calculate center-left value
+						
+						break;
+					case "1.1": //Calculate center-middle value
+						
+						break;
+					case "1.2": //Calculate center-right value
+						
+						break;
+					case "2.0": //Calculate bottom-left value
+						
+						break;
+					case "2.1": //Calculate bottom-middle value
+						
+						break;
+					case "2.2": //Calculate bottom-right value
+						
+						break;
 				}
 			}
 		}
