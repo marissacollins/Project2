@@ -1,10 +1,55 @@
 //Global variables for whether or not each player is human or AI
 var player1IsHuman = true;
-var player2IsHuman = false;
+var player2IsHuman = true;
 
 //Global variables for keeping track of game state
 var selected; //Keeps track of which spaces have already been selected
 var wonCells; //Keeps track of which cells have been won or tied (1 or 2 for player 1 or 2, 0 for still playing, -1 for tie)
+var logCounter = 0; //Keeps track of current line in log
+
+//Toggle Player 1 between Human and AI
+function p1Toggle(){
+	if(player1IsHuman == true){
+		player1IsHuman = false;
+		document.getElementById("player1Tag").innerHTML = "Player 1: AI";
+	}
+	else{
+		player1IsHuman = true;
+		document.getElementById("player1Tag").innerHTML = "Player 1: Human";
+	}
+}
+
+//Toggle Player 2 between Human and AI
+function p2Toggle(){
+	if(player2IsHuman == true){
+		player2IsHuman = false;
+		document.getElementById("player2Tag").innerHTML = "Player 2: AI";
+	}
+	else{
+		player2IsHuman = true;
+		document.getElementById("player2Tag").innerHTML = "Player 2: Human";
+	}
+}
+
+//Add text to log
+function addLog(newText){
+	logCounter++;
+	var logLayout = document.getElementById("logLayout").innerHTML;
+	document.getElementById("logLayout").innerHTML = logLayout + "<p id=\"logChat" + logCounter + "\">" + newText + "</p>";
+	document.getElementById("logLayout").scrollTop = document.getElementById("logLayout").scrollHeight;
+}
+
+//Equalize div heights
+function adjustHeights(){
+	var centerDivHeight = document.getElementById("gameLayout").clientHeight + "px";
+	document.getElementById("controlLayout").style.height = centerDivHeight;
+	document.getElementById("logLayout").style.height = centerDivHeight;
+}
+
+//Refresh the page
+function refreshPage(){
+	window.location.replace(window.location.href);
+}
 
 //Draws svg Ultimate Tic Tac Toe board in div specified by divId
 function drawBoard(divId)
@@ -124,7 +169,6 @@ function drawBoard(divId)
             }
         }
     }
-
 }
 
 //Initializes values for keeping track of where players have played and sets up for first player to make a move
@@ -254,7 +298,11 @@ function clearHighlighting()
 function markCellForPlayer(outerX, outerY, innerX, innerY, player)
 {
     console.log(wonCells); //DEBUG
+	addLog(wonCells);
     
+	document.getElementById("player1Btn").disabled = true;
+	document.getElementById("player2Btn").disabled = true;
+	
     //Make cell visible and set color corresponding to player; also set selected for that player and check for wins
     document.getElementById("cell" + outerX + "x" + outerY + "x" + innerX + "x" + innerY).setAttributeNS(null, "fill-opacity", 1);
     if(player == 1)

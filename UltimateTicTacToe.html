@@ -7,10 +7,25 @@
 		<title>Ultimate Tic Tac Toe</title>
 	</head>
 	<body>
-	   <h1 id="pageHeader">Ultimate Tic Tac Toe</h1>
-	   <h3 id="pageHeader">Presented by Kevin Lydon</h3>
+	   <div id="controlLayout">
+			<input id="refreshBtn" type="button" value="Restart Game" onclick="refreshPage();">
+			<input id="player1Btn" type="button" value="Toggle P1 AI" onclick="p1Toggle();">
+			<input id="player2Btn" type="button" value="Toggle P2 AI" onclick="p2Toggle();">
+			<h4 id="player1Tag">Player 1: Human</h4>
+			<h4 id="player2Tag">Player 2: Human</h4>
+	   </div>
+	   <div id="logLayout">
+			<p id="logChat">Click a square to start.</p>
+	   </div>
+	   <div id="gameLayout">
+		   <h1 id="pageHeader">Ultimate Tic Tac Toe</h1>
+		   <h3 id="pageHeader">Presented by Kevin Lydon</h3>
 
-	   <div id="board" width="600" height="600"></div>
-	   <script>drawBoard("board");startGame();</script>
+		   <div id="board" width="600" height="600"></div>
+		   <script>drawBoard("board");adjustHeights();startGame();</script>
+	   </div>
+	   <footer>
+			<h4 id="editCredits">Code edited by: Courtney Campbell, Brandon Charles, Marissa Collins, and Hannah Millea</h4>
+	   </footer>
 	</body>
 </html>
