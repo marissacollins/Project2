@@ -7,10 +7,31 @@
 		<title>Ultimate Tic Tac Toe</title>
 	</head>
 	<body>
-	   <h1 id="pageHeader">Ultimate Tic Tac Toe</h1>
-	   <h3 id="pageHeader">Presented by Kevin Lydon</h3>
+	   <div id="controlLayout">
+			<input id="refreshBtn" type="button" value="Refresh Page" onclick="refreshPage();">
+	   </div>
+	   <div id="logLayout">
+			<p id="logChat">
 
-	   <div id="board" width="600" height="600"></div>
-	   <script>drawBoard("board");startGame();</script>
+Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nullam ac ipsum ligula. Phasellus blandit est nisi, nec viverra velit mattis sit amet. Praesent eget gravida lorem. Ut rutrum congue eros, ut pellentesque metus porta ac. Sed aliquet venenatis dui nec fringilla. Praesent faucibus, diam eu sodales elementum, ipsum sem egestas tellus, non pulvinar massa urna ac dolor. Maecenas venenatis dapibus nibh et dignissim. Quisque ac diam id sem placerat egestas. Phasellus tristique leo eget libero luctus, quis tempor ipsum pellentesque. Duis finibus lobortis lectus id sagittis.
+
+Sed vel semper justo. Quisque non quam non justo rutrum varius ultricies a felis. Donec ac varius quam. Mauris porta ipsum non porttitor porttitor. Aliquam mattis porttitor lectus id pellentesque. Aliquam vitae consequat ex. Fusce quis ligula vitae magna aliquet rhoncus nec at nibh.
+
+Pellentesque est urna, tempus ac justo at, sagittis pulvinar nunc. Aliquam nibh nunc, iaculis ut nulla quis, congue laoreet enim. Maecenas luctus felis ut euismod auctor. Praesent a lectus metus. Nunc lacus eros, consequat in eros et, scelerisque iaculis risus. Aliquam ac placerat mi. Praesent consequat vestibulum mi. Etiam a blandit nibh. Curabitur magna arcu, aliquam at condimentum in, cursus non leo. Maecenas vel mollis est, non venenatis orci. Class aptent taciti sociosqu ad litora torquent per conubia nostra, per inceptos himenaeos. Praesent eget eros ut quam viverra volutpat.
+
+Suspendisse potenti. Nulla quis odio nulla. Ut ultrices, erat et rhoncus feugiat, mi sapien luctus mi, eget pretium mi orci id felis. Nam a ipsum id lectus faucibus finibus. Nam arcu mi, pretium id arcu ut, dictum consectetur velit. Proin vestibulum neque sed nisl interdum, ut interdum est blandit. Sed blandit ligula ut nibh finibus, in tincidunt ipsum rhoncus. Phasellus in accumsan metus. Integer sed est ipsum. Morbi bibendum ultrices urna in dapibus. Phasellus in tellus at lorem accumsan volutpat.
+
+Vivamus odio nisi, dictum id placerat porttitor, fermentum fermentum neque. Cras sed auctor risus, id faucibus eros. Donec faucibus quis sem varius tempus. Mauris quis neque ullamcorper, dictum velit egestas, dignissim diam. Vivamus felis purus, imperdiet quis dolor sit amet, blandit semper dui. Duis placerat bibendum suscipit. Nunc ac facilisis lectus, eget molestie leo. Pellentesque sed urna non magna hendrerit lobortis. Phasellus at turpis hendrerit, hendrerit dui a, porttitor nunc. Cum sociis natoque penatibus et magnis dis parturient montes, nascetur ridiculus mus. </p>
+	   </div>
+	   <div id="gameLayout">
+		   <h1 id="pageHeader">Ultimate Tic Tac Toe</h1>
+		   <h3 id="pageHeader">Presented by Kevin Lydon</h3>
+
+		   <div id="board" width="600" height="600"></div>
+		   <script>drawBoard("board");adjustHeights();startGame();</script>
+	   </div>
+	   <footer>
+			<h4 id="editCredits">Code edited by: Courtney Campbell, Brandon Charles, Marissa Collins, and Hannah Millea</h4>
+	   </footer>
 	</body>
 </html>

@@ -1,10 +1,23 @@
 //Global variables for whether or not each player is human or AI
 var player1IsHuman = true;
-var player2IsHuman = false;
+var player2IsHuman = true;
 
 //Global variables for keeping track of game state
 var selected; //Keeps track of which spaces have already been selected
 var wonCells; //Keeps track of which cells have been won or tied (1 or 2 for player 1 or 2, 0 for still playing, -1 for tie)
+
+//Equalize div heights
+function adjustHeights(){
+	var centerDivHeight = document.getElementById("gameLayout").style.height;
+	document.getElementById("controlLayout").style.height = centerDivHeight;
+	document.getElementById("logLayout").style.height = centerDivHeight;
+	document.getElementById("logChat").innerHTML = centerDivHeight;
+}
+
+//Refresh the page
+function refreshPage(){
+	window.location.reload();
+}
 
 //Draws svg Ultimate Tic Tac Toe board in div specified by divId
 function drawBoard(divId)
@@ -124,7 +137,6 @@ function drawBoard(divId)
             }
         }
     }
-
 }
 
 //Initializes values for keeping track of where players have played and sets up for first player to make a move
