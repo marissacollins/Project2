@@ -339,7 +339,7 @@ function markCellForPlayer(outerX, outerY, innerX, innerY, player)
             //Otherwise, get new play from AI 
             else
             {
-                var player2Move = calculateAIPlayer2Move(outerX, outerY, innerX, innerY);
+                var player2Move = calculateAIPlayer2Move(outerX, outerY);
 
                 markCellForPlayer(player2Move["outerX"], player2Move["outerY"], player2Move["innerX"], player2Move["innerY"], 2);
             }
