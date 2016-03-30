@@ -8,3 +8,13 @@
 	-Gain one point for each of your characters in a row from potential space
 	-Lose one point for each of your characters in a row with an opponent's character and the potential space
  */
+ 
+ //Set onclick functions for unselected cells in current inner board
+
+ function calculateAIPlayer1Move(){
+	 
+ }
+ 
+ function calculateAIPlayer2Move(){
+	 
+ }

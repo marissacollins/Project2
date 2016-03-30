@@ -194,7 +194,7 @@ function startGame()
         ]
    ];
    wonCells = [[0, 0, 0], [0, 0, 0], [0, 0, 0]];
-
+   
    //Highlight all cells to indicate first player can pick one
    for(var i = 0; i < 3; i++)
    {
