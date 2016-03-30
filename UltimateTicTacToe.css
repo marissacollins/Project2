@@ -41,6 +41,14 @@ body{
 	font-family: sans-serif;
 }
 
+#playerTurn{
+	font-size: 110%;
+	margin-top: 20%;
+	font-weight: bold;
+	font-family: sans-serif;
+	color: red;
+}
+
 #logLayout{
 	width: 25%;
 	padding: 0;
