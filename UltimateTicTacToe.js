@@ -6,6 +6,7 @@ var player2IsHuman = true;
 var selected; //Keeps track of which spaces have already been selected
 var wonCells; //Keeps track of which cells have been won or tied (1 or 2 for player 1 or 2, 0 for still playing, -1 for tie)
 var logCounter = 0; //Keeps track of current line in log
+var player1Turn = false;
 
 //Toggle Player 1 between Human and AI
 function p1Toggle(){
@@ -240,6 +241,17 @@ function setInitialOnClickFunctions()
 //Set onclick functions for board specified by outerX and outerY for player to play
 function setOnClickFunctionsForBoard(outerX, outerY, player)
 {
+	if(player1Turn == true){
+		document.getElementById("playerTurn").innerHTML = "Player 1's turn.";
+		document.getElementById("playerTurn").style.color = "red";
+		player1Turn = false;
+	}
+	else{
+		document.getElementById("playerTurn").innerHTML = "Player 2's turn.";
+		document.getElementById("playerTurn").style.color = "blue";
+		player1Turn = true;
+	}
+	
     //Set onclick functions for unselected cells in current inner board
     for(var i = 0; i < 3; i++)
     {
@@ -378,7 +390,7 @@ function setBoardForPlayer(outerX, outerY, innerX, innerY, nextPlayer)
     if(wonCells[innerX][innerY] == 0)
     {
         //Highlight inner board corresponsing to cell that was selected by last player
-        document.getElementById("cell" + innerX + "x" + innerY).setAttributeNS(null, "fill-opacity", .2);
+        document.getElementById("cell" + innerX + "x" + innerY).setAttributeNS(null, "fill-opacity", .6);
 
         //Call setOnClickFunctionsForBoard for baord corresponding to cell that lastPlayer just played
         setOnClickFunctionsForBoard(innerX, innerY, nextPlayer);
