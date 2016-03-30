@@ -19,19 +19,41 @@ body{
 	box-shadow: 0 10px 10px 0 rgba(0,0,0,0.2);
 }
 
+#player2Btn, #player1Btn{
+	width: 80%;
+	font-size: 110%;
+	font-weight: bold;
+	border-radius: 5px;
+	box-shadow: 0 10px 10px 0 rgba(0,0,0,0.2);
+	margin-top: 5%;
+}
+
+#player1Tag{
+	font-size: 110%;
+	margin-top: 20%;
+	font-weight: bold;
+	font-family: sans-serif;
+}
+
+#player2Tag{
+	font-size: 110%;
+	font-weight: bold;
+	font-family: sans-serif;
+}
+
 #logLayout{
 	width: 25%;
 	padding: 0;
 	margin: 0;
 	text-align: center;
 	float: right;
-	background-color: blue;
+	overflow: scroll;
 }
 
-#logChat{
+#logLayout p{
 	width: 100%;
 	font-size: 110%;
-	background-color: red;
+	margin: 0;
 }
 
 #gameLayout{
