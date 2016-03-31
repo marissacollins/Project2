@@ -2,21 +2,65 @@
 var player1IsHuman = true;
 var player2IsHuman = true;
 
+//Global variables for AI difficulty
+var levelAI1 = 1;
+var levelAI2 = 1;
+
 //Global variables for keeping track of game state
 var selected; //Keeps track of which spaces have already been selected
 var wonCells; //Keeps track of which cells have been won or tied (1 or 2 for player 1 or 2, 0 for still playing, -1 for tie)
 var logCounter = 0; //Keeps track of current line in log
 var player1Turn = false;
 
+//Toggle Player 1 AI difficulty
+function p1AIToggle(){
+	switch(levelAI1){
+		case 1:
+			levelAI1++;
+			document.getElementById("player1Level").innerHTML = "Level: " + levelAI1;
+			break;
+		case 2:
+			levelAI1++;
+			document.getElementById("player1Level").innerHTML = "Level: " + levelAI1;
+			break;
+		default:
+			levelAI1 = 1;
+			document.getElementById("player1Level").innerHTML = "Level: " + levelAI1;
+			break;
+	}
+}
+
+//Toggle Player 2 AI difficulty
+function p2AIToggle(){
+	switch(levelAI2){
+		case 1:
+			levelAI2++;
+			document.getElementById("player2Level").innerHTML = "Level: " + levelAI2;
+			break;
+		case 2:
+			levelAI2++;
+			document.getElementById("player2Level").innerHTML = "Level: " + levelAI2;
+			break;
+		default:
+			levelAI2 = 1;
+			document.getElementById("player2Level").innerHTML = "Level: " + levelAI2;
+			break;
+	}
+}
+
 //Toggle Player 1 between Human and AI
 function p1Toggle(){
 	if(player1IsHuman == true){
 		player1IsHuman = false;
 		document.getElementById("player1Tag").innerHTML = "Player 1: AI";
+		document.getElementById("AI1Btn").style.display = "inline";
+		document.getElementById("player1Level").style.display = "block";
 	}
 	else{
 		player1IsHuman = true;
 		document.getElementById("player1Tag").innerHTML = "Player 1: Human";
+		document.getElementById("AI1Btn").style.display = "none";
+		document.getElementById("player1Level").style.display = "none";
 	}
 }
 
@@ -25,10 +69,14 @@ function p2Toggle(){
 	if(player2IsHuman == true){
 		player2IsHuman = false;
 		document.getElementById("player2Tag").innerHTML = "Player 2: AI";
+		document.getElementById("AI2Btn").style.display = "inline";
+		document.getElementById("player2Level").style.display = "block";
 	}
 	else{
 		player2IsHuman = true;
 		document.getElementById("player2Tag").innerHTML = "Player 2: Human";
+		document.getElementById("AI2Btn").style.display = "none";
+		document.getElementById("player2Level").style.display = "none";
 	}
 }
 
@@ -241,15 +289,25 @@ function setInitialOnClickFunctions()
 //Set onclick functions for board specified by outerX and outerY for player to play
 function setOnClickFunctionsForBoard(outerX, outerY, player)
 {
-	if(player1Turn == true){
+	if(player1IsHuman == true && player2IsHuman == true){
+		if(player1Turn == true){
 		document.getElementById("playerTurn").innerHTML = "Player 1's turn.";
 		document.getElementById("playerTurn").style.color = "red";
 		player1Turn = false;
+		}
+		else{
+			document.getElementById("playerTurn").innerHTML = "Player 2's turn.";
+			document.getElementById("playerTurn").style.color = "blue";
+			player1Turn = true;
+		}
+	}
+	else if (player1IsHuman){
+		document.getElementById("playerTurn").innerHTML = "Player 1's turn.";
+		document.getElementById("playerTurn").style.color = "red";
 	}
 	else{
 		document.getElementById("playerTurn").innerHTML = "Player 2's turn.";
 		document.getElementById("playerTurn").style.color = "blue";
-		player1Turn = true;
 	}
 	
     //Set onclick functions for unselected cells in current inner board
@@ -314,6 +372,8 @@ function markCellForPlayer(outerX, outerY, innerX, innerY, player)
     
 	document.getElementById("player1Btn").disabled = true;
 	document.getElementById("player2Btn").disabled = true;
+	document.getElementById("AI1Btn").disabled = true;
+	document.getElementById("AI2Btn").disabled = true;
 	
     //Make cell visible and set color corresponding to player; also set selected for that player and check for wins
     document.getElementById("cell" + outerX + "x" + outerY + "x" + innerX + "x" + innerY).setAttributeNS(null, "fill-opacity", 1);

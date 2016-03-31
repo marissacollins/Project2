@@ -61,6 +61,7 @@
 								}	
 							}
 						}
+						//Check for blocked moves
 						if ((selected[outerX][outerY][0][1] == 2 && selected[outerX][outerY][0][2] == 1) || (selected[outerX][outerY][0][1] == 1 && selected[outerX][outerY][0][2] == 2)){ //Lose 1 point if the top row is blocked
 							spaceScore--;
 						}
@@ -69,6 +70,10 @@
 						}
 						if ((selected[outerX][outerY][1][0] == 2 && selected[outerX][outerY][2][0] == 1) || (selected[outerX][outerY][1][0] == 1 && selected[outerX][outerY][2][0] == 2)){ //Lose 1 point if the left column is blocked
 							spaceScore--;
+						}
+						//Check for diaganol win
+						if ((selected[outerX][outerY][1][1] == 2 && selected[outerX][outerY][2][2] == 2)){ //Gain a point for 2 in a row diaganol
+							spaceScore = 100;
 						}
 						
 						valTable[i][j] = spaceScore;
@@ -128,6 +133,11 @@
 						if ((selected[outerX][outerY][1][2] == 2 && selected[outerX][outerY][2][2] == 1) || (selected[outerX][outerY][1][2] == 1 && selected[outerX][outerY][2][2] == 2)){ //Lose 1 point if the right column is blocked
 							spaceScore--;
 						}
+						//Check for diaganol win
+						if ((selected[outerX][outerY][1][1] == 2 && selected[outerX][outerY][0][0] == 2)){ //Gain a point for 2 in a row diaganol
+							spaceScore = 100;
+						}
+						
 						valTable[i][j] = spaceScore;
 						addLog(checkVal + " score = " + valTable[i][j]);
 						break;
@@ -188,6 +198,13 @@
 						if ((selected[outerX][outerY][0][2] == 2 && selected[outerX][outerY][2][0] == 1) || (selected[outerX][outerY][0][2] == 1 && selected[outerX][outerY][2][0] == 2)){ //Lose 1 point if the down-right diaganol row is blocked
 							spaceScore--;
 						}
+						//Check for diaganol win
+						if ((selected[outerX][outerY][0][0] == 2 && selected[outerX][outerY][2][2] == 2)){ //Gain a point for 2 in a row diaganol
+							spaceScore = 100;
+						}
+						if ((selected[outerX][outerY][2][0] == 2 && selected[outerX][outerY][0][2] == 2)){ //Gain a point for 2 in a row diaganol
+							spaceScore = 100;
+						}
 						valTable[i][j] = spaceScore;
 						addLog(checkVal + " score = " + valTable[i][j]);
 						break;
@@ -245,6 +262,11 @@
 						if ((selected[outerX][outerY][0][0] == 2 && selected[outerX][outerY][1][0] == 1) || (selected[outerX][outerY][0][0] == 1 && selected[outerX][outerY][1][0] == 2)){ //Lose 1 point if the left column is blocked
 							spaceScore--;
 						}
+						//Check for diaganol win
+						if ((selected[outerX][outerY][1][1] == 2 && selected[outerX][outerY][0][2] == 2)){ //Gain a point for 2 in a row diaganol
+							spaceScore = 100;
+						}
+						
 						valTable[i][j] = spaceScore;
 						addLog(checkVal + " score = " + valTable[i][j]);
 						break;
@@ -302,6 +324,11 @@
 						if ((selected[outerX][outerY][0][2] == 2 && selected[outerX][outerY][1][2] == 1) || (selected[outerX][outerY][0][2] == 1 && selected[outerX][outerY][1][2] == 2)){ //Lose 1 point if the right column is blocked
 							spaceScore--;
 						}
+						//Check for diaganol win
+						if ((selected[outerX][outerY][1][1] == 2 && selected[outerX][outerY][0][0] == 2)){ //Gain a point for 2 in a row diaganol
+							spaceScore = 100;
+						}
+						
 						valTable[i][j] = spaceScore;
 						addLog(checkVal + " score = " + valTable[i][j]);
 						break;

@@ -8,7 +8,7 @@ body{
 	padding: 10% 0;
 	margin: 0;
 	float: left;
-	text-align: center;
+	text-align: left;
 }
 
 #refreshBtn{
@@ -17,6 +17,7 @@ body{
 	font-weight: bold;
 	border-radius: 5px;
 	box-shadow: 0 10px 10px 0 rgba(0,0,0,0.2);
+	margin-left: 20%;
 }
 
 #player2Btn, #player1Btn{
@@ -26,6 +27,18 @@ body{
 	border-radius: 5px;
 	box-shadow: 0 10px 10px 0 rgba(0,0,0,0.2);
 	margin-top: 5%;
+	margin-left: 20%;
+}
+
+#AI1Btn, #AI2Btn{
+	width: 80%;
+	font-size: 95%;
+	font-weight: bold;
+	border-radius: 5px;
+	box-shadow: 0 10px 10px 0 rgba(0,0,0,0.2);
+	margin-top: 5%;
+	margin-left: 20%;
+	display: none;
 }
 
 #player1Tag{
@@ -33,12 +46,23 @@ body{
 	margin-top: 20%;
 	font-weight: bold;
 	font-family: sans-serif;
+	margin-left: 20%;
 }
 
 #player2Tag{
 	font-size: 110%;
 	font-weight: bold;
 	font-family: sans-serif;
+	margin-left: 20%;
+}
+
+#player1Level, #player2Level{
+	font-size: 110%;
+	font-weight: bold;
+	font-family: sans-serif;
+	margin-left: 30%;
+	margin-top: -10%;
+	display: none;
 }
 
 #playerTurn{
@@ -47,6 +71,7 @@ body{
 	font-weight: bold;
 	font-family: sans-serif;
 	color: red;
+	margin-left: 20%;
 }
 
 #logLayout{
@@ -68,7 +93,7 @@ body{
 	width: 60%;
 	padding: 0;
 	margin: 0 auto;
-	
+	text-align: center;
 }
 
 #pageHeader{
@@ -83,7 +108,9 @@ body{
     text-align:center;
 }
 
-footer{
-	clear: both;
-	text-align: center;
+#editCredits{
+	font-size: 90%;
+	font-weight: bold;
+	font-family: sans-serif;
+	margin-right: 10%;
 }
