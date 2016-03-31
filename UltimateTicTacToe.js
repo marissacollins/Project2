@@ -310,7 +310,7 @@ function clearHighlighting()
 function markCellForPlayer(outerX, outerY, innerX, innerY, player)
 {
     console.log(wonCells); //DEBUG
-	addLog(wonCells);
+	//addLog(wonCells);
     
 	document.getElementById("player1Btn").disabled = true;
 	document.getElementById("player2Btn").disabled = true;
@@ -341,7 +341,8 @@ function markCellForPlayer(outerX, outerY, innerX, innerY, player)
             {
                 var player2Move = calculateAIPlayer2Move(outerX, outerY);
 
-                markCellForPlayer(player2Move["outerX"], player2Move["outerY"], player2Move["innerX"], player2Move["innerY"], 2);
+                //markCellForPlayer(player2Move["outerX"], player2Move["outerY"], player2Move["innerX"], player2Move["innerY"], 2);
+				markCellForPlayer(player2Move[0], player2Move[1], player2Move[2], player2Move[3], 2);
             }
         }
     }
