@@ -12,23 +12,46 @@
  */
 
  //Player 1 AI: Level 1
- //TODO: Add Player 2 AI code here, and swap 
+ //TODO: Add Player 2 AI code here, and swap the pawn values (1 and 2)
  function player1AILevel1(){
 	 
  }
  
- function player2AILevel1(outerX, outerY){
+ //Player 2 AI: Level 1
+ function player2AILevel1(outsideX, outsideY, wonCells){
+	 var outerX = outsideX;
+	 var outerY = outsideY;
+	 addLog("Won cells: " + wonCells);
+	 
 	/*--- Evaluate possible moves ---*/
+	var wonCheck = false;
+	while(wonCheck == false){
+		addLog("Checking cell " + outerX + "," + outerY);
+		if (wonCells[outerX][outerY] != 0){ //If the selected game has already been won, choose a new one
+		addLog("The cell was won by " + wonCells[outerX][outerY]);
+		outerX = Math.floor(Math.random() * 3);
+		outerY = Math.floor(Math.random() * 3);
+		addLog("New cell to check is " + outerX + "," + outerY);
+		}
+		else{
+			addLog("The following cell is valid " + outerX + "," + outerY);
+			wonCheck = true;
+		}
+	}
+	
 	//Create a value table for the game
+	//This holds the point values of each space in the game
 	var valTable = [[0,0,0],
 					[0,0,0],
 					[0,0,0]];
-	 var checkVal;
-	 var spaceScore = 0;
+	 
+	 var checkVal; //Determines which square you are calculating for
+	 var spaceScore = 0; //Point value for the space being calculated
+	
 	//Check the value of possible moves in game x,y
 	for(var i = 0; i < 3; i++){ //Check rows (x)
 		for (var j = 0; j < 3; j++){ //Check columns (y)
-			checkVal = i + "." + j;
+			checkVal = i + "." + j; //Which square is being checked
 			
 			if(selected[outerX][outerY][i][j] == 1  || selected[outerX][outerY][i][j] == 2){ //If the space is taken, set the value to 0
 				valTable[i][j] = 0;
@@ -234,7 +257,7 @@
 							spaceScore = 100;
 						}
 						//Check for vertical wins
-						if ((selected[outerX][outerY][1][0] == 2 && selected[outerX][outerY][2][0] == 2)){ //Gain a point for 2 in a row diaganol
+						if ((selected[outerX][outerY][0][0] == 2 && selected[outerX][outerY][2][0] == 2)){ //Gain a point for 2 in a row diaganol
 							spaceScore = 100;
 						}
 						
