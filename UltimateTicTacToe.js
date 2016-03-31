@@ -2,21 +2,65 @@
 var player1IsHuman = true;
 var player2IsHuman = true;
 
+//Global variables for AI difficulty
+var levelAI1 = 1;
+var levelAI2 = 1;
+
 //Global variables for keeping track of game state
 var selected; //Keeps track of which spaces have already been selected
 var wonCells; //Keeps track of which cells have been won or tied (1 or 2 for player 1 or 2, 0 for still playing, -1 for tie)
 var logCounter = 0; //Keeps track of current line in log
 var player1Turn = false;
 
+//Toggle Player 1 AI difficulty
+function p1AIToggle(){
+	switch(levelAI1){
+		case 1:
+			levelAI1++;
+			document.getElementById("player1Level").innerHTML = "Level: " + levelAI1;
+			break;
+		case 2:
+			levelAI1++;
+			document.getElementById("player1Level").innerHTML = "Level: " + levelAI1;
+			break;
+		default:
+			levelAI1 = 1;
+			document.getElementById("player1Level").innerHTML = "Level: " + levelAI1;
+			break;
+	}
+}
+
+//Toggle Player 2 AI difficulty
+function p2AIToggle(){
+	switch(levelAI2){
+		case 1:
+			levelAI2++;
+			document.getElementById("player2Level").innerHTML = "Level: " + levelAI2;
+			break;
+		case 2:
+			levelAI2++;
+			document.getElementById("player2Level").innerHTML = "Level: " + levelAI2;
+			break;
+		default:
+			levelAI2 = 1;
+			document.getElementById("player2Level").innerHTML = "Level: " + levelAI2;
+			break;
+	}
+}
+
 //Toggle Player 1 between Human and AI
 function p1Toggle(){
 	if(player1IsHuman == true){
 		player1IsHuman = false;
 		document.getElementById("player1Tag").innerHTML = "Player 1: AI";
+		document.getElementById("AI1Btn").style.display = "inline";
+		document.getElementById("player1Level").style.display = "block";
 	}
 	else{
 		player1IsHuman = true;
 		document.getElementById("player1Tag").innerHTML = "Player 1: Human";
+		document.getElementById("AI1Btn").style.display = "none";
+		document.getElementById("player1Level").style.display = "none";
 	}
 }
 
@@ -25,10 +69,14 @@ function p2Toggle(){
 	if(player2IsHuman == true){
 		player2IsHuman = false;
 		document.getElementById("player2Tag").innerHTML = "Player 2: AI";
+		document.getElementById("AI2Btn").style.display = "inline";
+		document.getElementById("player2Level").style.display = "block";
 	}
 	else{
 		player2IsHuman = true;
 		document.getElementById("player2Tag").innerHTML = "Player 2: Human";
+		document.getElementById("AI2Btn").style.display = "none";
+		document.getElementById("player2Level").style.display = "none";
 	}
 }
 
@@ -194,7 +242,7 @@ function startGame()
         ]
    ];
    wonCells = [[0, 0, 0], [0, 0, 0], [0, 0, 0]];
-
+   
    //Highlight all cells to indicate first player can pick one
    for(var i = 0; i < 3; i++)
    {
@@ -238,18 +286,28 @@ function setInitialOnClickFunctions()
     }
 }
 
-//Set onclick functions for board specified by outerX and outerY for player to play
-function setOnClickFunctionsForBoard(outerX, outerY, player)
+//Set onclick functions for board specified by outerY and outerX for player to play
+function setOnClickFunctionsForBoard(outerY, outerX, player)
 {
-	if(player1Turn == true){
+	if(player1IsHuman == true && player2IsHuman == true){
+		if(player1Turn == true){
 		document.getElementById("playerTurn").innerHTML = "Player 1's turn.";
 		document.getElementById("playerTurn").style.color = "red";
 		player1Turn = false;
+		}
+		else{
+			document.getElementById("playerTurn").innerHTML = "Player 2's turn.";
+			document.getElementById("playerTurn").style.color = "blue";
+			player1Turn = true;
+		}
+	}
+	else if (player1IsHuman){
+		document.getElementById("playerTurn").innerHTML = "Player 1's turn.";
+		document.getElementById("playerTurn").style.color = "red";
 	}
 	else{
 		document.getElementById("playerTurn").innerHTML = "Player 2's turn.";
 		document.getElementById("playerTurn").style.color = "blue";
-		player1Turn = true;
 	}
 	
     //Set onclick functions for unselected cells in current inner board
@@ -258,14 +316,14 @@ function setOnClickFunctionsForBoard(outerX, outerY, player)
         for(var j = 0; j < 3; j++)
         {
             //Set onclick for this cell to call markCellForPlayer if cell is not already selected
-            if(selected[outerX][outerY][i][j] == 0){
-                document.getElementById("cell" + outerX + "x" + outerY + "x" + i + "x" + j).onclick = (function(){
-                    var currentInnerX = outerX;
-                    var currentInnerY = outerY;
+            if(selected[outerY][outerX][i][j] == 0){
+                document.getElementById("cell" + outerY + "x" + outerX + "x" + i + "x" + j).onclick = (function(){
+                    var currentinnerY = outerY;
+                    var currentinnerX = outerX;
                     var currentI = i;
                     var currentJ = j;
                     return function(){
-                        markCellForPlayer(currentInnerX, currentInnerY, currentI, currentJ, player);
+                        markCellForPlayer(currentinnerY, currentinnerX, currentI, currentJ, player);
                     }
                 })();
             }
@@ -307,23 +365,25 @@ function clearHighlighting()
 }
 
 //Marks cell ixjxkxl with color for player and sets up for other player to go
-function markCellForPlayer(outerX, outerY, innerX, innerY, player)
+function markCellForPlayer(outerY, outerX, innerY, innerX, player)
 {
     console.log(wonCells); //DEBUG
-	addLog(wonCells);
+	//addLog(wonCells);
     
 	document.getElementById("player1Btn").disabled = true;
 	document.getElementById("player2Btn").disabled = true;
+	document.getElementById("AI1Btn").disabled = true;
+	document.getElementById("AI2Btn").disabled = true;
 	
     //Make cell visible and set color corresponding to player; also set selected for that player and check for wins
-    document.getElementById("cell" + outerX + "x" + outerY + "x" + innerX + "x" + innerY).setAttributeNS(null, "fill-opacity", 1);
+    document.getElementById("cell" + outerY + "x" + outerX + "x" + innerY + "x" + innerX).setAttributeNS(null, "fill-opacity", 1);
     if(player == 1)
     {
-        document.getElementById("cell" + outerX + "x" + outerY + "x" + innerX + "x" + innerY).setAttributeNS(null, "fill", "red");
-        selected[outerX][outerY][innerX][innerY] = 1;
+        document.getElementById("cell" + outerY + "x" + outerX + "x" + innerY + "x" + innerX).setAttributeNS(null, "fill", "red");
+        selected[outerY][outerX][innerY][innerX] = 1;
         
         //Set wonCells to corresponding value from checkForBoardWin (sets to 0 if there is no win/tie yet)
-        wonCells[outerX][outerY] = checkForBoardWin(outerX, outerY, player);
+        wonCells[outerY][outerX] = checkForBoardWin(outerY, outerX, player);
 
         //Check for a game win
         var final = checkForGameWin(player);
@@ -335,23 +395,24 @@ function markCellForPlayer(outerX, outerY, innerX, innerY, player)
         {
             //Set board for player 2 to go if they are human
             if(player2IsHuman)
-                setBoardForPlayer(outerX, outerY, innerX, innerY, 2);
+                setBoardForPlayer(outerY, outerX, innerY, innerX, 2);
             //Otherwise, get new play from AI 
             else
             {
-                var player2Move = calculateAIPlayer2Move(outerX, outerY, innerX, innerY);
+                var player2Move = player2AILevel1(innerY, innerX, wonCells);
 
-                markCellForPlayer(player2Move["outerX"], player2Move["outerY"], player2Move["innerX"], player2Move["innerY"], 2);
+                //markCellForPlayer(player2Move["outerY"], player2Move["outerX"], player2Move["innerY"], player2Move["innerX"], 2);
+				markCellForPlayer(player2Move[0], player2Move[1], player2Move[2], player2Move[3], 2);
             }
         }
     }
     else
     {
-        document.getElementById("cell" + outerX + "x" + outerY + "x" + innerX + "x" + innerY).setAttributeNS(null, "fill", "blue");
-        selected[outerX][outerY][innerX][innerY] = 2;
-        //console.log("Player 2 chose: " + outerX + "x" + outerY + "x" + innerX + "x" + innerY); //DEBUG
+        document.getElementById("cell" + outerY + "x" + outerX + "x" + innerY + "x" + innerX).setAttributeNS(null, "fill", "blue");
+        selected[outerY][outerX][innerY][innerX] = 2;
+        //console.log("Player 2 chose: " + outerY + "x" + outerX + "x" + innerY + "x" + innerX); //DEBUG
         //Set wonCells to corresponding value from checkForBoardWin (sets to 0 if there is no win/tie yet)
-        wonCells[outerX][outerY] = checkForBoardWin(outerX, outerY, player);
+        wonCells[outerY][outerX] = checkForBoardWin(outerY, outerX, player);
 
 
         //Check for a game win
@@ -364,13 +425,13 @@ function markCellForPlayer(outerX, outerY, innerX, innerY, player)
         {
             //Set board for player 1 to go if they are human
             if(player1IsHuman)
-                setBoardForPlayer(outerX, outerY, innerX, innerY, 1);
+                setBoardForPlayer(outerY, outerX, innerY, innerX, 1);
             //Otherwise, get new play from AI 
             else
             {
-                var player1Move = calculateAIPlayer1Move(outerX, outerY, innerX, innerY);
+                var player1Move = player1AILevel1(innerY, innerX, wonCells);
 
-                markCellForPlayer(player1Move["outerX"], player1Move["outerY"], player1Move["innerX"], player1Move["innerY"], 1);
+                markCellForPlayer(player1Move["outerY"], player1Move["outerX"], player1Move["innerY"], player1Move["innerX"], 1);
             }
         }
     } 
@@ -378,7 +439,7 @@ function markCellForPlayer(outerX, outerY, innerX, innerY, player)
 }
 
 //Sets up correct highlighting and onclick functions for player to play next turn
-function setBoardForPlayer(outerX, outerY, innerX, innerY, nextPlayer)
+function setBoardForPlayer(outerY, outerX, innerY, innerX, nextPlayer)
 {
     //Clear onclick functions for all of the cells
     clearOnClick();
@@ -387,13 +448,13 @@ function setBoardForPlayer(outerX, outerY, innerX, innerY, nextPlayer)
     clearHighlighting();
 
     //If board to play next isn't won, highlight and set onclicks for that board, otherwise allow playing of any board
-    if(wonCells[innerX][innerY] == 0)
+    if(wonCells[innerY][innerX] == 0)
     {
         //Highlight inner board corresponsing to cell that was selected by last player
-        document.getElementById("cell" + innerX + "x" + innerY).setAttributeNS(null, "fill-opacity", .6);
+        document.getElementById("cell" + innerY + "x" + innerX).setAttributeNS(null, "fill-opacity", .6);
 
         //Call setOnClickFunctionsForBoard for baord corresponding to cell that lastPlayer just played
-        setOnClickFunctionsForBoard(innerX, innerY, nextPlayer);
+        setOnClickFunctionsForBoard(innerY, innerX, nextPlayer);
 
     }
     else
@@ -415,33 +476,33 @@ function setBoardForPlayer(outerX, outerY, innerX, innerY, nextPlayer)
 
 }
 
-//Checks to see if the player has won board specified by outerX and outerY or if that board has been tied
-function checkForBoardWin(outerX, outerY, player)
+//Checks to see if the player has won board specified by outerY and outerX or if that board has been tied
+function checkForBoardWin(outerY, outerX, player)
 {
     //Check for win
     //Down left column
-    if(selected[outerX][outerY][0][0] == player && selected[outerX][outerY][0][1] == player && selected[outerX][outerY][0][2] == player)
+    if(selected[outerY][outerX][0][0] == player && selected[outerY][outerX][0][1] == player && selected[outerY][outerX][0][2] == player)
         return player;
     //Down middle column
-    if(selected[outerX][outerY][1][0] == player && selected[outerX][outerY][1][1] == player && selected[outerX][outerY][1][2] == player)
+    if(selected[outerY][outerX][1][0] == player && selected[outerY][outerX][1][1] == player && selected[outerY][outerX][1][2] == player)
         return player;
     //Down right column
-    if(selected[outerX][outerY][2][0] == player && selected[outerX][outerY][2][1] == player && selected[outerX][outerY][2][2] == player)
+    if(selected[outerY][outerX][2][0] == player && selected[outerY][outerX][2][1] == player && selected[outerY][outerX][2][2] == player)
         return player;
     //Across top row
-    if(selected[outerX][outerY][0][0] == player && selected[outerX][outerY][1][0] == player && selected[outerX][outerY][2][0] == player)
+    if(selected[outerY][outerX][0][0] == player && selected[outerY][outerX][1][0] == player && selected[outerY][outerX][2][0] == player)
         return player;  
     //Across middle row
-    if(selected[outerX][outerY][0][1] == player && selected[outerX][outerY][1][1] == player && selected[outerX][outerY][2][1] == player)
+    if(selected[outerY][outerX][0][1] == player && selected[outerY][outerX][1][1] == player && selected[outerY][outerX][2][1] == player)
         return player;
     //Across bottom row
-    if(selected[outerX][outerY][0][2] == player && selected[outerX][outerY][1][2] == player && selected[outerX][outerY][2][2] == player)
+    if(selected[outerY][outerX][0][2] == player && selected[outerY][outerX][1][2] == player && selected[outerY][outerX][2][2] == player)
         return player;
     //Top left to bottom right
-    if(selected[outerX][outerY][0][0] == player && selected[outerX][outerY][1][1] == player && selected[outerX][outerY][2][2] == player)
+    if(selected[outerY][outerX][0][0] == player && selected[outerY][outerX][1][1] == player && selected[outerY][outerX][2][2] == player)
         return player;
     //Top right to bottom left
-    if(selected[outerX][outerY][0][2] == player && selected[outerX][outerY][1][1] == player && selected[outerX][outerY][2][0] == player)
+    if(selected[outerY][outerX][0][2] == player && selected[outerY][outerX][1][1] == player && selected[outerY][outerX][2][0] == player)
         return player;
 
     
@@ -451,7 +512,7 @@ function checkForBoardWin(outerX, outerY, player)
     {
         for(var j = 0; j < 3; j++)
         {
-            if(selected[outerX][outerY][i][j] != 0)
+            if(selected[outerY][outerX][i][j] != 0)
                 countOfSelected++;
         }
     }
