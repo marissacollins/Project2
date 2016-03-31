@@ -10,21 +10,19 @@
 	-Lose one point for each of your characters in a row with an opponent's character and the potential space
 	-A space has a value of 0 if it is already taken
  */
- 
- //Set onclick functions for unselected cells in current inner board
 
+ //Player 1 AI: Level 1
+ //TODO: Add Player 2 AI code here, and swap 
  function player1AILevel1(){
 	 
  }
  
  function player2AILevel1(outerX, outerY){
-	 addLog("outerX = " + outerX + " | outerY = " + outerY);
 	/*--- Evaluate possible moves ---*/
 	//Create a value table for the game
 	var valTable = [[0,0,0],
 					[0,0,0],
 					[0,0,0]];
-	 
 	 var checkVal;
 	 var spaceScore = 0;
 	//Check the value of possible moves in game x,y
@@ -71,9 +69,29 @@
 						if ((selected[outerX][outerY][1][0] == 2 && selected[outerX][outerY][2][0] == 1) || (selected[outerX][outerY][1][0] == 1 && selected[outerX][outerY][2][0] == 2)){ //Lose 1 point if the left column is blocked
 							spaceScore--;
 						}
-						//Check for diaganol win
+						//Check for diaganol wins
 						if ((selected[outerX][outerY][1][1] == 2 && selected[outerX][outerY][2][2] == 2)){ //Gain a point for 2 in a row diaganol
 							spaceScore = 100;
+						}
+						//Check for vertical wins
+						if ((selected[outerX][outerY][1][0] == 2 && selected[outerX][outerY][2][0] == 2)){ //Gain a point for 2 in a row diaganol
+							spaceScore = 100;
+						}
+						//Check for horizontal wins
+						if ((selected[outerX][outerY][0][1] == 2 && selected[outerX][outerY][0][2] == 2)){ //Gain a point for 2 in a row diaganol
+							spaceScore = 100;
+						}
+						//Check for diaganol win blocks
+						if ((selected[outerX][outerY][1][1] == 1 && selected[outerX][outerY][2][2] == 1)){ //Gain a point for 2 in a row diaganol
+							spaceScore = 75;
+						}
+						//Check for vertical win blocks
+						if ((selected[outerX][outerY][1][0] == 1 && selected[outerX][outerY][2][0] == 1)){ //Gain a point for 2 in a row diaganol
+							spaceScore = 75;
+						}
+						//Check for horizontal win blocks
+						if ((selected[outerX][outerY][0][1] == 1 && selected[outerX][outerY][0][2] == 1)){ //Gain a point for 2 in a row diaganol
+							spaceScore = 75;
 						}
 						
 						valTable[i][j] = spaceScore;
@@ -97,12 +115,30 @@
 								}	
 							}
 						}
+						//Check for blocked moves
 						if ((selected[outerX][outerY][0][0] == 2 && selected[outerX][outerY][0][2] == 1) || (selected[outerX][outerY][0][0] == 1 && selected[outerX][outerY][0][2] == 2)){ //Lose 1 point if the top row is blocked
 							spaceScore--;
 						} 
 						if ((selected[outerX][outerY][1][1] == 2 && selected[outerX][outerY][2][1] == 1) || (selected[outerX][outerY][1][1] == 1 && selected[outerX][outerY][2][1] == 2)){ //Lose 1 point if the center column is blocked
 							spaceScore--;
 						}
+						//Check for horizontal win blocks
+						if ((selected[outerX][outerY][2][0] == 1 && selected[outerX][outerY][2][2] == 1)){ //Gain a point for 2 in a row diaganol
+							spaceScore = 75;
+						}
+						//Check for vertical win blocks
+						if ((selected[outerX][outerY][1][1] == 1 && selected[outerX][outerY][0][1] == 1)){ //Gain a point for 2 in a row diaganol
+							spaceScore = 75;
+						}
+						//Check for horizontal wins
+						if ((selected[outerX][outerY][2][0] == 2 && selected[outerX][outerY][2][2] == 2)){ //Gain a point for 2 in a row diaganol
+							spaceScore = 100;
+						}
+						//Check for vertical wins
+						if ((selected[outerX][outerY][1][1] == 2 && selected[outerX][outerY][0][1] == 2)){ //Gain a point for 2 in a row diaganol
+							spaceScore = 100;
+						}
+						
 						valTable[i][j] = spaceScore;
 						addLog(checkVal + " score = " + valTable[i][j]);
 						break;
@@ -137,6 +173,26 @@
 						if ((selected[outerX][outerY][1][1] == 2 && selected[outerX][outerY][0][0] == 2)){ //Gain a point for 2 in a row diaganol
 							spaceScore = 100;
 						}
+						//Check for vertical wins
+						if ((selected[outerX][outerY][1][2] == 2 && selected[outerX][outerY][2][2] == 2)){ //Gain a point for 2 in a row diaganol
+							spaceScore = 100;
+						}
+						//Check for horizontal wins
+						if ((selected[outerX][outerY][0][1] == 2 && selected[outerX][outerY][0][0] == 2)){ //Gain a point for 2 in a row diaganol
+							spaceScore = 100;
+						}
+						//Check for diaganol win blocks
+						if ((selected[outerX][outerY][1][1] == 1 && selected[outerX][outerY][2][0] == 1)){ //Gain a point for 2 in a row diaganol
+							spaceScore = 75;
+						}
+						//Check for vertical win blocks
+						if ((selected[outerX][outerY][1][2] == 1 && selected[outerX][outerY][2][2] == 1)){ //Gain a point for 2 in a row diaganol
+							spaceScore = 75;
+						}
+						//Check for horizontal win blocks
+						if ((selected[outerX][outerY][0][1] == 1 && selected[outerX][outerY][0][0] == 1)){ //Gain a point for 2 in a row diaganol
+							spaceScore = 75;
+						}
 						
 						valTable[i][j] = spaceScore;
 						addLog(checkVal + " score = " + valTable[i][j]);
@@ -165,6 +221,23 @@
 						if ((selected[outerX][outerY][0][0] == 2 && selected[outerX][outerY][0][2] == 1) || (selected[outerX][outerY][0][0] == 1 && selected[outerX][outerY][0][2] == 2)){ //Lose 1 point if the left column is blocked
 							spaceScore--;
 						}
+						//Check for horizontal win blocks
+						if ((selected[outerX][outerY][1][1] == 1 && selected[outerX][outerY][1][2] == 1)){ //Gain a point for 2 in a row diaganol
+							spaceScore = 75;
+						}
+						//Check for vertical win blocks
+						if ((selected[outerX][outerY][0][0] == 1 && selected[outerX][outerY][2][0] == 1)){ //Gain a point for 2 in a row diaganol
+							spaceScore = 75;
+						}
+						//Check for horizontal wins
+						if ((selected[outerX][outerY][1][1] == 2 && selected[outerX][outerY][1][2] == 2)){ //Gain a point for 2 in a row diaganol
+							spaceScore = 100;
+						}
+						//Check for vertical wins
+						if ((selected[outerX][outerY][1][0] == 2 && selected[outerX][outerY][2][0] == 2)){ //Gain a point for 2 in a row diaganol
+							spaceScore = 100;
+						}
+						
 						valTable[i][j] = spaceScore;
 						addLog(checkVal + " score = " + valTable[i][j]);
 						break;
@@ -198,13 +271,37 @@
 						if ((selected[outerX][outerY][0][2] == 2 && selected[outerX][outerY][2][0] == 1) || (selected[outerX][outerY][0][2] == 1 && selected[outerX][outerY][2][0] == 2)){ //Lose 1 point if the down-right diaganol row is blocked
 							spaceScore--;
 						}
-						//Check for diaganol win
+						//Check for diaganol wins
 						if ((selected[outerX][outerY][0][0] == 2 && selected[outerX][outerY][2][2] == 2)){ //Gain a point for 2 in a row diaganol
 							spaceScore = 100;
 						}
 						if ((selected[outerX][outerY][2][0] == 2 && selected[outerX][outerY][0][2] == 2)){ //Gain a point for 2 in a row diaganol
 							spaceScore = 100;
 						}
+						//Check for diaganol blocks
+						if ((selected[outerX][outerY][0][0] == 1 && selected[outerX][outerY][2][2] == 1)){ //Gain a point for 2 in a row diaganol
+							spaceScore = 75;
+						}
+						if ((selected[outerX][outerY][2][0] == 1 && selected[outerX][outerY][0][2] == 1)){ //Gain a point for 2 in a row diaganol
+							spaceScore = 75;
+						}
+						//Check for horizontal win blocks
+						if ((selected[outerX][outerY][1][0] == 1 && selected[outerX][outerY][1][2] == 1)){ //Gain a point for 2 in a row diaganol
+							spaceScore = 75;
+						}
+						//Check for vertical win blocks
+						if ((selected[outerX][outerY][0][1] == 1 && selected[outerX][outerY][2][1] == 1)){ //Gain a point for 2 in a row diaganol
+							spaceScore = 75;
+						}
+						//Check for horizontal wins
+						if ((selected[outerX][outerY][1][0] == 2 && selected[outerX][outerY][1][2] == 2)){ //Gain a point for 2 in a row diaganol
+							spaceScore = 100;
+						}
+						//Check for vertical wins
+						if ((selected[outerX][outerY][0][1] == 2 && selected[outerX][outerY][2][1] == 2)){ //Gain a point for 2 in a row diaganol
+							spaceScore = 100;
+						}
+						
 						valTable[i][j] = spaceScore;
 						addLog(checkVal + " score = " + valTable[i][j]);
 						break;
@@ -232,6 +329,23 @@
 						if ((selected[outerX][outerY][2][0] == 2 && selected[outerX][outerY][2][2] == 1) || (selected[outerX][outerY][2][0] == 1 && selected[outerX][outerY][2][2] == 2)){ //Lose 1 point if the right column is blocked
 							spaceScore--;
 						}
+						//Check for horizontal win blocks
+						if ((selected[outerX][outerY][1][1] == 1 && selected[outerX][outerY][1][0] == 1)){ //Gain a point for 2 in a row diaganol
+							spaceScore = 75;
+						}
+						//Check for vertical win blocks
+						if ((selected[outerX][outerY][0][2] == 1 && selected[outerX][outerY][2][2] == 1)){ //Gain a point for 2 in a row diaganol
+							spaceScore = 75;
+						}
+						//Check for horizontal wins
+						if ((selected[outerX][outerY][1][1] == 2 && selected[outerX][outerY][1][0] == 2)){ //Gain a point for 2 in a row diaganol
+							spaceScore = 100;
+						}
+						//Check for vertical wins
+						if ((selected[outerX][outerY][2][0] == 2 && selected[outerX][outerY][2][2] == 2)){ //Gain a point for 2 in a row diaganol
+							spaceScore = 100;
+						}
+						
 						valTable[i][j] = spaceScore;
 						addLog(checkVal + " score = " + valTable[i][j]);
 						break;
@@ -262,9 +376,29 @@
 						if ((selected[outerX][outerY][0][0] == 2 && selected[outerX][outerY][1][0] == 1) || (selected[outerX][outerY][0][0] == 1 && selected[outerX][outerY][1][0] == 2)){ //Lose 1 point if the left column is blocked
 							spaceScore--;
 						}
-						//Check for diaganol win
+						//Check for diaganol wins
 						if ((selected[outerX][outerY][1][1] == 2 && selected[outerX][outerY][0][2] == 2)){ //Gain a point for 2 in a row diaganol
 							spaceScore = 100;
+						}
+						//Check for vertical wins
+						if ((selected[outerX][outerY][1][0] == 2 && selected[outerX][outerY][0][0] == 2)){ //Gain a point for 2 in a row diaganol
+							spaceScore = 100;
+						}
+						//Check for horizontal wins
+						if ((selected[outerX][outerY][2][1] == 2 && selected[outerX][outerY][2][2] == 2)){ //Gain a point for 2 in a row diaganol
+							spaceScore = 100;
+						}
+						//Check for diaganol win blocks
+						if ((selected[outerX][outerY][1][1] == 1 && selected[outerX][outerY][0][2] == 1)){ //Gain a point for 2 in a row diaganol
+							spaceScore = 75;
+						}
+						//Check for vertical win blocks
+						if ((selected[outerX][outerY][1][0] == 1 && selected[outerX][outerY][0][0] == 1)){ //Gain a point for 2 in a row diaganol
+							spaceScore = 75;
+						}
+						//Check for horizontal win blocks
+						if ((selected[outerX][outerY][2][1] == 1 && selected[outerX][outerY][2][2] == 1)){ //Gain a point for 2 in a row diaganol
+							spaceScore = 75;
 						}
 						
 						valTable[i][j] = spaceScore;
@@ -328,6 +462,26 @@
 						if ((selected[outerX][outerY][1][1] == 2 && selected[outerX][outerY][0][0] == 2)){ //Gain a point for 2 in a row diaganol
 							spaceScore = 100;
 						}
+						//Check for verical wins
+						if ((selected[outerX][outerY][1][2] == 2 && selected[outerX][outerY][2][2] == 2)){ //Gain a point for 2 in a row diaganol
+							spaceScore = 100;
+						}
+						//Check for horizontal wins
+						if ((selected[outerX][outerY][0][1] == 2 && selected[outerX][outerY][0][0] == 2)){ //Gain a point for 2 in a row diaganol
+							spaceScore = 100;
+						}
+						//Check for diaganol win blocks
+						if ((selected[outerX][outerY][1][1] == 1 && selected[outerX][outerY][0][0] == 1)){ //Gain a point for 2 in a row diaganol
+							spaceScore = 75;
+						}
+						//Check for verical win blocks
+						if ((selected[outerX][outerY][1][2] == 1 && selected[outerX][outerY][2][2] == 1)){ //Gain a point for 2 in a row diaganol
+							spaceScore = 75;
+						}
+						//Check for horizontal win blocks
+						if ((selected[outerX][outerY][0][1] == 1 && selected[outerX][outerY][0][0] == 1)){ //Gain a point for 2 in a row diaganol
+							spaceScore = 75;
+						}
 						
 						valTable[i][j] = spaceScore;
 						addLog(checkVal + " score = " + valTable[i][j]);
@@ -336,7 +490,7 @@
 			}
 		}
 	}
-	addLog("Move values from right to left, top to bottom: " + valTable);
+	addLog("Move values from left to right, top to bottom: " + valTable);
 	
 	/*--- Select move from best options ---*/
 	//Find best value
@@ -363,7 +517,13 @@
 			}
 		}
 	}
-	addLog("possibleOptions = " + possibleOptions);
+	var optionString = "";
+	for(var test = 0; test < possibleOptions.length; test++){
+		optionString = (optionString + " (" + possibleOptions[test] + ", " + possibleOptions[test + 1] + ")");
+		test++;
+	}
+	addLog("Possible options:");
+	addLog(optionString);
 	selectedOption = (Math.floor(Math.random() * (possibleOptions.length / 2)) * 2);
 	bestOptionLocation[0] = outerX;
 	bestOptionLocation[1] = outerY;
