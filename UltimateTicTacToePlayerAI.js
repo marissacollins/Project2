@@ -1,4 +1,5 @@
 /*	AI 1: Easy mode using depth-bound, min-max search with evaluation function
+	Created by: Courtney Campbell, Brandon Charles, Marissa Collins, and Hannah Millea
 	
 	Evaluation function:
 	4 Criteria to be used when evaluating a move
@@ -12,11 +13,11 @@
  
  //Set onclick functions for unselected cells in current inner board
 
- function calculateAIPlayer1Move(){
+ function player1AILevel1(){
 	 
  }
  
- function calculateAIPlayer2Move(outerX, outerY){
+ function player2AILevel1(outerX, outerY){
 	 addLog("outerX = " + outerX + " | outerY = " + outerY);
 	/*--- Evaluate possible moves ---*/
 	//Create a value table for the game
@@ -320,20 +321,28 @@
 			}
 		}
 	}
-	addLog("Best option = " + bestOption);
+	addLog("Best value = " + bestOption);
+	var possibleOptions = []; //array holding the possible places to move on the inner board
+	var optionCounter = 0;
+	var selectedOption = 0;
 	var bestOptionLocation = [0,0,0,0];
 	for (var ares = 0; ares < 3; ares++){
-		for (var zeus = 0; zeus < 3; zeus++)
-			if (bestOption == valTable[ares][zeus]){addLog("got here");
-				bestOptionLocation[0] = outerX;
-				bestOptionLocation[1] = outerY;
-				bestOptionLocation[2] = ares;
-				bestOptionLocation[3] = zeus;
-				zeus = 3;
-				ares = 3;{
+		for (var zeus = 0; zeus < 3; zeus++){
+			if (bestOption == valTable[ares][zeus]){
+				possibleOptions[optionCounter] = ares;
+				optionCounter++;
+				possibleOptions[optionCounter] = zeus;
+				optionCounter++;
 			}
-			addLog("Best option location= " + bestOptionLocation);
 		}
 	}
+	addLog("possibleOptions = " + possibleOptions);
+	selectedOption = (Math.floor(Math.random() * (possibleOptions.length / 2)) * 2);
+	bestOptionLocation[0] = outerX;
+	bestOptionLocation[1] = outerY;
+	addLog("selected option = " + selectedOption);
+	bestOptionLocation[2] = possibleOptions[selectedOption];
+	bestOptionLocation[3] = possibleOptions[selectedOption + 1];
+	addLog("Best option location = " + bestOptionLocation);
 	return bestOptionLocation;
  }
