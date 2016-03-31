@@ -17,6 +17,7 @@
  }
  
  function calculateAIPlayer2Move(outerX, outerY){
+	 addLog("outerX = " + outerX + " | outerY = " + outerY);
 	/*--- Evaluate possible moves ---*/
 	//Create a value table for the game
 	var valTable = [[0,0,0],
