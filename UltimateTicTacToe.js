@@ -224,6 +224,22 @@ function drawBoard(divId)
 function startGame()
 {
    //Initialize selected and wonCells for a blank board
+   //selected (also game board)): outerx by innerx by outery by innery
+   /*
+		         oy    |    oy    |    oy
+			  iy iy iy | iy iy iy | iy iy iy
+		   ix 0  0  0  | 0  0  0  | 0  0  0
+		ox ix 0  0  0  | 0  0  0  | 0  0  0
+		   ix 0  0  0  | 0  0  0  | 0  0  0
+		   ---------------------------------
+		   ix 0  0  0  | 0  0  0  | 0  0  0
+		ox ix 0  0  0  | 0  0  0  | 0  0  0
+		   ix 0  0  0  | 0  0  0  | 0  0  0
+		   ---------------------------------
+		   ix 0  0  0  | 0  0  0  | 0  0  0
+		ox ix 0  0  0  | 0  0  0  | 0  0  0
+		   ix 0  0  0  | 0  0  0  | 0  0  0
+   */
    selected = [
         [
             [[0, 0, 0], [0, 0, 0], [0, 0, 0]],
@@ -241,8 +257,14 @@ function startGame()
             [[0, 0, 0], [0, 0, 0], [0, 0, 0]]
         ]
    ];
+   //Won cells: x by y
+   /*
+		  y y y
+		x 0 0 0
+		x 0 0 0
+		x 0 0 0
+   */
    wonCells = [[0, 0, 0], [0, 0, 0], [0, 0, 0]];
-   
    //Highlight all cells to indicate first player can pick one
    for(var i = 0; i < 3; i++)
    {
@@ -399,7 +421,7 @@ function markCellForPlayer(outerY, outerX, innerY, innerX, player)
             //Otherwise, get new play from AI 
             else
             {
-                var player2Move = player2AILevel1(innerY, innerX, wonCells);
+                var player2Move = player2AILevel1(innerX, innerY, wonCells);
 
                 //markCellForPlayer(player2Move["outerY"], player2Move["outerX"], player2Move["innerY"], player2Move["innerX"], 2);
 				markCellForPlayer(player2Move[0], player2Move[1], player2Move[2], player2Move[3], 2);
@@ -429,7 +451,7 @@ function markCellForPlayer(outerY, outerX, innerY, innerX, player)
             //Otherwise, get new play from AI 
             else
             {
-                var player1Move = player1AILevel1(innerY, innerX, wonCells);
+                var player1Move = player1AILevel1(innerX, innerY, wonCells);
 
                 markCellForPlayer(player1Move["outerY"], player1Move["outerX"], player1Move["innerY"], player1Move["innerX"], 1);
             }
