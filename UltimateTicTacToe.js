@@ -9,7 +9,6 @@ var levelAI2 = 1;
 //Global variables for keeping track of game state
 var selected; //Keeps track of which spaces have already been selected
 var wonCells; //Keeps track of which cells have been won or tied (1 or 2 for player 1 or 2, 0 for still playing, -1 for tie)
-var logCounter = 0; //Keeps track of current line in log
 var player1Turn = false;
 
 //Toggle Player 1 AI difficulty
@@ -82,9 +81,8 @@ function p2Toggle(){
 
 //Add text to log
 function addLog(newText){
-	logCounter++;
 	var logLayout = document.getElementById("logLayout").innerHTML;
-	document.getElementById("logLayout").innerHTML = logLayout + "<p id=\"logChat" + logCounter + "\">" + newText + "</p>";
+	document.getElementById("logLayout").innerHTML = logLayout + "<br>" + newText;
 	document.getElementById("logLayout").scrollTop = document.getElementById("logLayout").scrollHeight;
 }
 
@@ -275,6 +273,8 @@ function startGame()
        }
    }
 
+   addLog("Click a square to start.");
+   
    //Set on click functions for each cell so player 1 can select one of them
    setInitialOnClickFunctions();
 }
@@ -339,13 +339,13 @@ function setOnClickFunctionsForBoard(outerX, outerY, player)
         {
             //Set onclick for this cell to call markCellForPlayer if cell is not already selected
             if(selected[outerX][outerY][i][j] == 0){
-                document.getElementById("cell" + outerY + "x" + outerX + "x" + i + "x" + j).onclick = (function(){
+                document.getElementById("cell" + outerX + "x" + outerY + "x" + i + "x" + j).onclick = (function(){
                     var currentinnerY = outerY;
                     var currentinnerX = outerX;
                     var currentI = i;
                     var currentJ = j;
                     return function(){
-                        markCellForPlayer(currentinnerY, currentinnerX, currentI, currentJ, player);
+                        markCellForPlayer(currentinnerX, currentinnerY, currentI, currentJ, player);
                     }
                 })();
             }
@@ -398,11 +398,11 @@ function markCellForPlayer(outerX, outerY, innerX, innerY, player)
 	document.getElementById("AI2Btn").disabled = true;
 	
     //Make cell visible and set color corresponding to player; also set selected for that player and check for wins
-    document.getElementById("cell" + outerY + "x" + outerX + "x" + innerY + "x" + innerX).setAttributeNS(null, "fill-opacity", 1);
+    document.getElementById("cell" + outerX + "x" + outerY + "x" + innerX + "x" + innerY).setAttributeNS(null, "fill-opacity", 1);
     if(player == 1)
     {
-        document.getElementById("cell" + outerY + "x" + outerX + "x" + innerY + "x" + innerX).setAttributeNS(null, "fill", "red");
-        selected[outerX][outerY][innerY][innerX] = 1;
+        document.getElementById("cell" + outerX + "x" + outerY + "x" + innerX + "x" + innerY).setAttributeNS(null, "fill", "red");
+        selected[outerX][outerY][innerX][innerY] = 1;
         
         //Set wonCells to corresponding value from checkForBoardWin (sets to 0 if there is no win/tie yet)
         wonCells[outerX][outerY] = checkForBoardWin(outerX, outerY, player);
@@ -430,9 +430,9 @@ function markCellForPlayer(outerX, outerY, innerX, innerY, player)
     }
     else
     {
-        document.getElementById("cell" + outerY + "x" + outerX + "x" + innerY + "x" + innerX).setAttributeNS(null, "fill", "blue");
-        selected[outerX][outerY][innerY][innerX] = 2;
-        //console.log("Player 2 chose: " + outerY + "x" + outerX + "x" + innerY + "x" + innerX); //DEBUG
+        document.getElementById("cell" + outerX + "x" + outerY + "x" + innerX + "x" + innerY).setAttributeNS(null, "fill", "blue");
+        selected[outerX][outerY][innerX][innerY] = 2;
+        //console.log("Player 2 chose: " + outerY + "x" + outerX + "x" + innerX + "x" + innerY); //DEBUG
         //Set wonCells to corresponding value from checkForBoardWin (sets to 0 if there is no win/tie yet)
         wonCells[outerX][outerY] = checkForBoardWin(outerX, outerY, player);
 
@@ -470,10 +470,10 @@ function setBoardForPlayer(outerX, outerY, innerX, innerY, nextPlayer)
     clearHighlighting();
 
     //If board to play next isn't won, highlight and set onclicks for that board, otherwise allow playing of any board
-    if(wonCells[innerY][innerX] == 0)
+    if(wonCells[innerX][innerY] == 0)
     {
         //Highlight inner board corresponsing to cell that was selected by last player
-        document.getElementById("cell" + innerY + "x" + innerX).setAttributeNS(null, "fill-opacity", .6);
+        document.getElementById("cell" + innerX + "x" + innerY).setAttributeNS(null, "fill-opacity", .6);
 
         //Call setOnClickFunctionsForBoard for baord corresponding to cell that lastPlayer just played
         setOnClickFunctionsForBoard(innerX, innerY, nextPlayer);
