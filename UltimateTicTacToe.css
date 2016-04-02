@@ -81,12 +81,9 @@ body{
 	text-align: center;
 	float: right;
 	overflow: scroll;
-}
-
-#logLayout p{
-	width: 100%;
 	font-size: 110%;
-	margin: 0;
+	font-family: sans-serif;
+	text-align: left;
 }
 
 #gameLayout{
