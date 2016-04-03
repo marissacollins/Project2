@@ -274,9 +274,8 @@ function startGame()
    }
 
    addLog("Click a square to start.");
-   
    //Set on click functions for each cell so player 1 can select one of them
-   setInitialOnClickFunctions();
+	setInitialOnClickFunctions();
 }
 
 //Sets the on click functions for the first move in the game
@@ -421,9 +420,8 @@ function markCellForPlayer(outerX, outerY, innerX, innerY, player)
             //Otherwise, get new play from AI 
             else
             {
-                var player2Move = player2AILevel1(innerX, innerY, wonCells);
+                var player2Move = playerAILevel1(innerX, innerY, wonCells, 2);
 
-                //markCellForPlayer(player2Move["outerX"], player2Move["outerY"], player2Move["innerX"], player2Move["innerY"], 2);
 				markCellForPlayer(player2Move[0], player2Move[1], player2Move[2], player2Move[3], 2);
             }
         }
@@ -451,9 +449,9 @@ function markCellForPlayer(outerX, outerY, innerX, innerY, player)
             //Otherwise, get new play from AI 
             else
             {
-                var player1Move = player1AILevel1(innerX, innerY, wonCells);
+                var player1Move = playerAILevel1(innerX, innerY, wonCells, 1);
 
-                markCellForPlayer(player1Move["outerX"], player1Move["outerY"], player1Move["innerX"], player1Move["innerY"], 1);
+                markCellForPlayer(player1Move[0], player1Move[1], player1Move[2], player1Move[3], 1);
             }
         }
     } 
@@ -635,12 +633,12 @@ function finishGame(final)
     else
         addTextEltToSVG(svg, textAttrs, "It's a Tie!")
 
-    //Add refresh message
+    //Add restart message
     textAttrs["style"] = "text-anchor: middle; font-family: sans-serif; font-size:100%";
     textAttrs["x"] = width/2;
     textAttrs["y"] = height/2 + 30;
 
-    addTextEltToSVG(svg, textAttrs, "Hit refresh to play again!");
+    addTextEltToSVG(svg, textAttrs, "Hit Restart Game to play again!");
 
 
 
