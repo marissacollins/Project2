@@ -291,16 +291,30 @@ function setInitialOnClickFunctions()
             {
                 for(var l = 0; l < 3; l++)
                 {
-                    //Set onclick for this cell to call markCellForPlayer with current values for i, j, k, and l
-                    document.getElementById("cell" + i + "x" + j + "x" + k + "x" + l).onclick = (function(){
-                        var currentI = i;
-                        var currentJ = j;
-                        var currentK = k;
-                        var currentL = l;
-                        return function(){
-                            markCellForPlayer(currentI, currentJ, currentK, currentL, 1);
-                        }
-                    })();
+					if (player1IsHuman == false)
+					{
+						addLog("hello");
+						//Set onclick for this cell to call markCellForPlayer with current values for i, j, k, and l
+						document.getElementById("cell" + i + "x" + j + "x" + k + "x" + l).onclick = (function(){
+							var randomX = Math.floor(Math.random() * 3);
+							var randomY = Math.floor(Math.random() * 3);
+							var player1Move = playerAILevel1(randomX, randomY, wonCells, 1);
+							return function(){
+								markCellForPlayer(player1Move[0], player1Move[1], player1Move[2], player1Move[3], 1);
+							}
+						})();
+					} else{
+						//Set onclick for this cell to call markCellForPlayer with current values for i, j, k, and l
+						document.getElementById("cell" + i + "x" + j + "x" + k + "x" + l).onclick = (function(){
+							var currentI = i;
+							var currentJ = j;
+							var currentK = k;
+							var currentL = l;
+							return function(){
+								markCellForPlayer(currentI, currentJ, currentK, currentL, 1);
+							}
+						})();
+					}
                 }
             }
         }
@@ -420,9 +434,22 @@ function markCellForPlayer(outerX, outerY, innerX, innerY, player)
             //Otherwise, get new play from AI 
             else
             {
-                var player2Move = playerAILevel1(innerX, innerY, wonCells, 2);
-
-				markCellForPlayer(player2Move[0], player2Move[1], player2Move[2], player2Move[3], 2);
+				addLog("Player 2 AI level is " + levelAI2);
+				switch(levelAI2){
+					case 2:
+						playerAILevel2(innerX, innerY, wonCells, 2);
+						var player2Move = playerAILevel2(innerX, innerY, wonCells, 2);
+						markCellForPlayer(player2Move[0], player2Move[1], player2Move[2], player2Move[3], 2);
+						break;
+					case 3:
+						var player2Move = playerAILevel1(innerX, innerY, wonCells, 2); //change after level 3 completed
+						markCellForPlayer(player2Move[0], player2Move[1], player2Move[2], player2Move[3], 2);
+						break;
+					default:
+						var player2Move = playerAILevel1(innerX, innerY, wonCells, 2);
+						markCellForPlayer(player2Move[0], player2Move[1], player2Move[2], player2Move[3], 2);
+						//break;
+				}
             }
         }
     }
@@ -449,9 +476,20 @@ function markCellForPlayer(outerX, outerY, innerX, innerY, player)
             //Otherwise, get new play from AI 
             else
             {
-                var player1Move = playerAILevel1(innerX, innerY, wonCells, 1);
-
-                markCellForPlayer(player1Move[0], player1Move[1], player1Move[2], player1Move[3], 1);
+				switch(levelAI1){
+					case 2:
+						var player1Move = playerAILevel2(innerX, innerY, wonCells, 1);
+						markCellForPlayer(player1Move[0], player1Move[1], player1Move[2], player1Move[3], 1);
+						break;
+					case 3:
+						var player1Move = playerAILevel1(innerX, innerY, wonCells, 1); //change after level 3 completed
+						markCellForPlayer(player1Move[0], player1Move[1], player1Move[2], player1Move[3], 1);
+						break;
+					default:
+						var player1Move = playerAILevel1(innerX, innerY, wonCells, 1);
+						markCellForPlayer(player1Move[0], player1Move[1], player1Move[2], player1Move[3], 1);
+						break;
+				}
             }
         }
     } 
