@@ -1,27 +1,15 @@
-/*	AI 1: Easy mode using depth-bound, min-max search with evaluation function
-	Created by: Courtney Campbell, Brandon Charles, Marissa Collins, and Hannah Millea
-	
-	Dumb AI Evaluation function:
-	4 Criteria to be used when evaluating a move
-	
-	-Gain one point for each opponent character in a row from potential space
-	-Gain one point for each of your characters in a row from potential space
-	-Lose one point for each of your characters in a row with an opponent's character and the potential space
-	-Winning a game takes highest priority, while stopping an opponent from winning is second highest.
-	-A space has a value of 0 if it is already taken
-	
-	AI Levels:
-	Level 1: Dumb AI - Uses a Single-Ply look-a-head to determine the best move for that specific inner game. Decisions amongst ties are random.
-	Level 2: AI - Uses a Two-Ply look-a-head to determine the best move for that specific inner game, and the worst move for the opponent in the next turn. Decisions amongst ties are random.
-	Level 3: Smart AI - Uses a Multi-Ply look-a-head to determine the best possible set of moves. Decisions amongst ties are branched out for the best case. Moves cannot exceed a decision time of 2.5 minutes.
- */
- 
-//Player AI: Level 1
- function playerAILevel1(outX, outY, wonGames, playerTurn){
-	//Make the inputs variables for easy modifications
+// Calculate multiply AI
+ //Parameters:	outX = X position of next move to be made in large game board
+ //				outY = Y position of next move to be made in large game board
+ //				wonGames = array that holds the win states of the games (0 = not won, 1 = red, 2 = blue)
+ //				gameBoard = array that holds the move states of the games (0 = open, 1 = red, 2 = blue)
+ //				playerTurn = which player is the AI currently (1 = red, 2 = blue)
+ function calcAI(outX, outY, wonGames, gameBoard, playerTurn){
+	//Make the parameters variables for easy modifications
 	var outsideX = outX;
 	var outsideY = outY;
 	var wonGameCells = wonGames;
+	var gameState = gameBoard;
 	
 	var opponentTurn;
 	if(playerTurn == 1){
@@ -76,7 +64,7 @@
 			//addLog("Calculating " + checkVal);
 			
 			//If the space is taken, set the point value to 0
-			if(selected[outsideX][outsideY][i][j] == opponentTurn  || selected[outsideX][outsideY][i][j] == playerTurn){
+			if(gameState[outsideX][outsideY][i][j] == opponentTurn  || gameState[outsideX][outsideY][i][j] == playerTurn){
 				valTable[i][j] = 0;
 				//addLog("Coords (" + i + "," + j + ") are already filled.");
 			}
@@ -99,11 +87,11 @@
 								}
 								//Add points for blocking an opponent, or lining up a move for self
 								else{
-									if(selected[outsideX][outsideY][x][y] == opponentTurn){ //Block
+									if(gameState[outsideX][outsideY][x][y] == opponentTurn){ //Block
 										spaceScore++;
 										//addLog("Blocking an opponent's move: +1. Score = " + spaceScore);
 									}
-									if(selected[outsideX][outsideY][x][y] == playerTurn){ //Set-up
+									if(gameState[outsideX][outsideY][x][y] == playerTurn){ //Set-up
 										spaceScore++;
 										//addLog("Setting up a move for yourself: +1. Score = " + spaceScore);
 									}
@@ -112,41 +100,41 @@
 						}
 						/*--- Check for blocked moves (-1 point)---*/
 						//Top row
-						if ((selected[outsideX][outsideY][1][0] == playerTurn && selected[outsideX][outsideY][2][0] == opponentTurn) || (selected[outsideX][outsideY][1][0] == opponentTurn && selected[outsideX][outsideY][2][0] == playerTurn)){
+						if ((gameState[outsideX][outsideY][1][0] == playerTurn && gameState[outsideX][outsideY][2][0] == opponentTurn) || (gameState[outsideX][outsideY][1][0] == opponentTurn && gameState[outsideX][outsideY][2][0] == playerTurn)){
 							spaceScore--;
 						}
 						//diagonal
-						if ((selected[outsideX][outsideY][1][1] == playerTurn && selected[outsideX][outsideY][2][2] == opponentTurn) || (selected[outsideX][outsideY][1][1] == opponentTurn && selected[outsideX][outsideY][2][2] == playerTurn)){
+						if ((gameState[outsideX][outsideY][1][1] == playerTurn && gameState[outsideX][outsideY][2][2] == opponentTurn) || (gameState[outsideX][outsideY][1][1] == opponentTurn && gameState[outsideX][outsideY][2][2] == playerTurn)){
 							spaceScore--;
 						}
 						//Left column
-						if ((selected[outsideX][outsideY][0][1] == playerTurn && selected[outsideX][outsideY][0][2] == opponentTurn) || (selected[outsideX][outsideY][0][1] == opponentTurn && selected[outsideX][outsideY][0][2] == playerTurn)){
+						if ((gameState[outsideX][outsideY][0][1] == playerTurn && gameState[outsideX][outsideY][0][2] == opponentTurn) || (gameState[outsideX][outsideY][0][1] == opponentTurn && gameState[outsideX][outsideY][0][2] == playerTurn)){
 							spaceScore--;
 						}
 						/*--- Check for winning moves (opponent) (Second highest priority = 75 points) ---*/
 						//Top row
-						if ((selected[outsideX][outsideY][1][0] == opponentTurn && selected[outsideX][outsideY][2][0] == opponentTurn)){
+						if ((gameState[outsideX][outsideY][1][0] == opponentTurn && gameState[outsideX][outsideY][2][0] == opponentTurn)){
 							spaceScore = 75;
 						}
 						//diagonal
-						if ((selected[outsideX][outsideY][1][1] == opponentTurn && selected[outsideX][outsideY][2][2] == opponentTurn)){
+						if ((gameState[outsideX][outsideY][1][1] == opponentTurn && gameState[outsideX][outsideY][2][2] == opponentTurn)){
 							spaceScore = 75;
 						}
 						//Left column
-						if ((selected[outsideX][outsideY][0][1] == opponentTurn && selected[outsideX][outsideY][0][2] == opponentTurn)){
+						if ((gameState[outsideX][outsideY][0][1] == opponentTurn && gameState[outsideX][outsideY][0][2] == opponentTurn)){
 							spaceScore = 75;
 						}
 						/*--- Check for winning moves (self) (Highest priority = 100 points) ---*/
 						//Top row
-						if ((selected[outsideX][outsideY][1][0] == playerTurn && selected[outsideX][outsideY][2][0] == playerTurn)){
+						if ((gameState[outsideX][outsideY][1][0] == playerTurn && gameState[outsideX][outsideY][2][0] == playerTurn)){
 							spaceScore = 100;
 						}
 						//diagonal
-						if ((selected[outsideX][outsideY][1][1] == playerTurn && selected[outsideX][outsideY][2][2] == playerTurn)){
+						if ((gameState[outsideX][outsideY][1][1] == playerTurn && gameState[outsideX][outsideY][2][2] == playerTurn)){
 							spaceScore = 100;
 						}
 						//Left column
-						if ((selected[outsideX][outsideY][0][1] == playerTurn && selected[outsideX][outsideY][0][2] == playerTurn)){
+						if ((gameState[outsideX][outsideY][0][1] == playerTurn && gameState[outsideX][outsideY][0][2] == playerTurn)){
 							spaceScore = 100;
 						}
 						
@@ -170,11 +158,11 @@
 								}
 								//Add points for blocking an opponent, or lining up a move for self
 								else{
-									if(selected[outsideX][outsideY][x][y] == opponentTurn){ //Block
+									if(gameState[outsideX][outsideY][x][y] == opponentTurn){ //Block
 										spaceScore++;
 										//addLog("Blocking an opponent's move: +1. Score = " + spaceScore);
 									}
-									if(selected[outsideX][outsideY][x][y] == playerTurn){ //Set-up
+									if(gameState[outsideX][outsideY][x][y] == playerTurn){ //Set-up
 										spaceScore++;
 										//addLog("Setting up a move for yourself: +1. Score = " + spaceScore);
 									}
@@ -183,29 +171,29 @@
 						}
 						/*--- Check for blocked moves (-1 point)---*/
 						//Center row
-						if ((selected[outsideX][outsideY][1][1] == playerTurn && selected[outsideX][outsideY][2][1] == opponentTurn) || (selected[outsideX][outsideY][1][1] == opponentTurn && selected[outsideX][outsideY][2][1] == playerTurn)){
+						if ((gameState[outsideX][outsideY][1][1] == playerTurn && gameState[outsideX][outsideY][2][1] == opponentTurn) || (gameState[outsideX][outsideY][1][1] == opponentTurn && gameState[outsideX][outsideY][2][1] == playerTurn)){
 							spaceScore--;
 						}
 						//Left column
-						if ((selected[outsideX][outsideY][0][0] == playerTurn && selected[outsideX][outsideY][0][2] == opponentTurn) || (selected[outsideX][outsideY][0][0] == opponentTurn && selected[outsideX][outsideY][0][2] == playerTurn)){
+						if ((gameState[outsideX][outsideY][0][0] == playerTurn && gameState[outsideX][outsideY][0][2] == opponentTurn) || (gameState[outsideX][outsideY][0][0] == opponentTurn && gameState[outsideX][outsideY][0][2] == playerTurn)){
 							spaceScore--;
 						}
 						/*--- Check for winning moves (opponent) (Second highest priority = 75 points) ---*/
 						//Center row
-						if ((selected[outsideX][outsideY][1][1] == opponentTurn && selected[outsideX][outsideY][2][1] == opponentTurn)){
+						if ((gameState[outsideX][outsideY][1][1] == opponentTurn && gameState[outsideX][outsideY][2][1] == opponentTurn)){
 							spaceScore = 75;
 						}
 						//Left column
-						if ((selected[outsideX][outsideY][0][0] == opponentTurn && selected[outsideX][outsideY][0][2] == opponentTurn)){
+						if ((gameState[outsideX][outsideY][0][0] == opponentTurn && gameState[outsideX][outsideY][0][2] == opponentTurn)){
 							spaceScore = 75;
 						}
 						/*--- Check for winning moves (self) (Highest priority = 100 points) ---*/
 						//Center row
-						if ((selected[outsideX][outsideY][1][1] == playerTurn && selected[outsideX][outsideY][2][1] == playerTurn)){
+						if ((gameState[outsideX][outsideY][1][1] == playerTurn && gameState[outsideX][outsideY][2][1] == playerTurn)){
 							spaceScore = 100;
 						}
 						//Left column
-						if ((selected[outsideX][outsideY][0][0] == playerTurn && selected[outsideX][outsideY][0][2] == playerTurn)){
+						if ((gameState[outsideX][outsideY][0][0] == playerTurn && gameState[outsideX][outsideY][0][2] == playerTurn)){
 							spaceScore = 100;
 						}
 						
@@ -229,11 +217,11 @@
 								}
 								//Add points for blocking an opponent, or lining up a move for self
 								else{
-									if(selected[outsideX][outsideY][x][y] == opponentTurn){ //Block
+									if(gameState[outsideX][outsideY][x][y] == opponentTurn){ //Block
 										spaceScore++;
 										//addLog("Blocking an opponent's move: +1. Score = " + spaceScore);
 									}
-									if(selected[outsideX][outsideY][x][y] == playerTurn){ //Set-up
+									if(gameState[outsideX][outsideY][x][y] == playerTurn){ //Set-up
 										spaceScore++;
 										//addLog("Setting up a move for yourself: +1. Score = " + spaceScore);
 									}
@@ -242,41 +230,41 @@
 						}
 						/*--- Check for blocked moves (-1 point)---*/
 						//Bottom row
-						if ((selected[outsideX][outsideY][1][2] == playerTurn && selected[outsideX][outsideY][2][2] == opponentTurn) || (selected[outsideX][outsideY][1][2] == opponentTurn && selected[outsideX][outsideY][2][2] == playerTurn)){
+						if ((gameState[outsideX][outsideY][1][2] == playerTurn && gameState[outsideX][outsideY][2][2] == opponentTurn) || (gameState[outsideX][outsideY][1][2] == opponentTurn && gameState[outsideX][outsideY][2][2] == playerTurn)){
 							spaceScore--;
 						}
 						//diagonal
-						if ((selected[outsideX][outsideY][1][1] == playerTurn && selected[outsideX][outsideY][2][0] == opponentTurn) || (selected[outsideX][outsideY][1][1] == opponentTurn && selected[outsideX][outsideY][2][0] == playerTurn)){
+						if ((gameState[outsideX][outsideY][1][1] == playerTurn && gameState[outsideX][outsideY][2][0] == opponentTurn) || (gameState[outsideX][outsideY][1][1] == opponentTurn && gameState[outsideX][outsideY][2][0] == playerTurn)){
 							spaceScore--;
 						}
 						//Left column
-						if ((selected[outsideX][outsideY][0][0] == playerTurn && selected[outsideX][outsideY][0][1] == opponentTurn) || (selected[outsideX][outsideY][0][0] == opponentTurn && selected[outsideX][outsideY][0][1] == playerTurn)){
+						if ((gameState[outsideX][outsideY][0][0] == playerTurn && gameState[outsideX][outsideY][0][1] == opponentTurn) || (gameState[outsideX][outsideY][0][0] == opponentTurn && gameState[outsideX][outsideY][0][1] == playerTurn)){
 							spaceScore--;
 						}
 						/*--- Check for winning moves (opponent) (Second highest priority = 75 points) ---*/
 						//Bottom row
-						if ((selected[outsideX][outsideY][1][2] == opponentTurn && selected[outsideX][outsideY][2][2] == opponentTurn)){
+						if ((gameState[outsideX][outsideY][1][2] == opponentTurn && gameState[outsideX][outsideY][2][2] == opponentTurn)){
 							spaceScore = 75;
 						}
 						//diagonal
-						if ((selected[outsideX][outsideY][1][1] == opponentTurn && selected[outsideX][outsideY][2][0] == opponentTurn)){
+						if ((gameState[outsideX][outsideY][1][1] == opponentTurn && gameState[outsideX][outsideY][2][0] == opponentTurn)){
 							spaceScore = 75;
 						}
 						//Left column
-						if ((selected[outsideX][outsideY][0][0] == opponentTurn && selected[outsideX][outsideY][0][1] == opponentTurn)){
+						if ((gameState[outsideX][outsideY][0][0] == opponentTurn && gameState[outsideX][outsideY][0][1] == opponentTurn)){
 							spaceScore = 75;
 						}
 						/*--- Check for winning moves (self) (Highest priority = 100 points) ---*/
 						//Bottom row
-						if ((selected[outsideX][outsideY][1][2] == playerTurn && selected[outsideX][outsideY][2][2] == playerTurn)){
+						if ((gameState[outsideX][outsideY][1][2] == playerTurn && gameState[outsideX][outsideY][2][2] == playerTurn)){
 							spaceScore = 100;
 						}
 						//diagonal
-						if ((selected[outsideX][outsideY][1][1] == playerTurn && selected[outsideX][outsideY][2][0] == playerTurn)){
+						if ((gameState[outsideX][outsideY][1][1] == playerTurn && gameState[outsideX][outsideY][2][0] == playerTurn)){
 							spaceScore = 100;
 						}
 						//Left column
-						if ((selected[outsideX][outsideY][0][0] == playerTurn && selected[outsideX][outsideY][0][1] == playerTurn)){
+						if ((gameState[outsideX][outsideY][0][0] == playerTurn && gameState[outsideX][outsideY][0][1] == playerTurn)){
 							spaceScore = 100;
 						}
 						
@@ -300,11 +288,11 @@
 								}
 								//Add points for blocking an opponent, or lining up a move for self
 								else{
-									if(selected[outsideX][outsideY][x][y] == opponentTurn){ //Block
+									if(gameState[outsideX][outsideY][x][y] == opponentTurn){ //Block
 										spaceScore++;
 										//addLog("Blocking an opponent's move: +1. Score = " + spaceScore);
 									}
-									if(selected[outsideX][outsideY][x][y] == playerTurn){ //Set-up
+									if(gameState[outsideX][outsideY][x][y] == playerTurn){ //Set-up
 										spaceScore++;
 										//addLog("Setting up a move for yourself: +1. Score = " + spaceScore);
 									}
@@ -313,29 +301,29 @@
 						}
 						/*--- Check for blocked moves (-1 point)---*/
 						//Top row
-						if ((selected[outsideX][outsideY][0][0] == playerTurn && selected[outsideX][outsideY][2][0] == opponentTurn) || (selected[outsideX][outsideY][0][0] == opponentTurn && selected[outsideX][outsideY][2][0] == playerTurn)){
+						if ((gameState[outsideX][outsideY][0][0] == playerTurn && gameState[outsideX][outsideY][2][0] == opponentTurn) || (gameState[outsideX][outsideY][0][0] == opponentTurn && gameState[outsideX][outsideY][2][0] == playerTurn)){
 							spaceScore--;
 						}
 						//Middle column
-						if ((selected[outsideX][outsideY][1][1] == playerTurn && selected[outsideX][outsideY][1][2] == opponentTurn) || (selected[outsideX][outsideY][1][1] == opponentTurn && selected[outsideX][outsideY][1][2] == playerTurn)){
+						if ((gameState[outsideX][outsideY][1][1] == playerTurn && gameState[outsideX][outsideY][1][2] == opponentTurn) || (gameState[outsideX][outsideY][1][1] == opponentTurn && gameState[outsideX][outsideY][1][2] == playerTurn)){
 							spaceScore--;
 						}
 						/*--- Check for winning moves (opponent) (Second highest priority = 75 points) ---*/
 						//Top row
-						if ((selected[outsideX][outsideY][0][0] == opponentTurn && selected[outsideX][outsideY][2][0] == opponentTurn)){
+						if ((gameState[outsideX][outsideY][0][0] == opponentTurn && gameState[outsideX][outsideY][2][0] == opponentTurn)){
 							spaceScore = 75;
 						}
 						//Middle column
-						if ((selected[outsideX][outsideY][1][1] == opponentTurn && selected[outsideX][outsideY][1][2] == opponentTurn)){
+						if ((gameState[outsideX][outsideY][1][1] == opponentTurn && gameState[outsideX][outsideY][1][2] == opponentTurn)){
 							spaceScore = 75;
 						}
 						/*--- Check for winning moves (self) (Highest priority = 100 points) ---*/
 						//Top row
-						if ((selected[outsideX][outsideY][0][0] == playerTurn && selected[outsideX][outsideY][2][0] == playerTurn)){
+						if ((gameState[outsideX][outsideY][0][0] == playerTurn && gameState[outsideX][outsideY][2][0] == playerTurn)){
 							spaceScore = 100;
 						}
 						//Middle column
-						if ((selected[outsideX][outsideY][1][1] == playerTurn && selected[outsideX][outsideY][1][2] == playerTurn)){
+						if ((gameState[outsideX][outsideY][1][1] == playerTurn && gameState[outsideX][outsideY][1][2] == playerTurn)){
 							spaceScore = 100;
 						}
 						
@@ -359,11 +347,11 @@
 								}
 								//Add points for blocking an opponent, or lining up a move for self
 								else{
-									if(selected[outsideX][outsideY][x][y] == opponentTurn){ //Block
+									if(gameState[outsideX][outsideY][x][y] == opponentTurn){ //Block
 										spaceScore++;
 										//addLog("Blocking an opponent's move: +1. Score = " + spaceScore);
 									}
-									if(selected[outsideX][outsideY][x][y] == playerTurn){ //Set-up
+									if(gameState[outsideX][outsideY][x][y] == playerTurn){ //Set-up
 										spaceScore++;
 										//addLog("Setting up a move for yourself: +1. Score = " + spaceScore);
 									}
@@ -372,50 +360,50 @@
 						}
 						/*--- Check for blocked moves (-1 point)---*/
 						//Center row
-						if ((selected[outsideX][outsideY][0][1] == playerTurn && selected[outsideX][outsideY][2][1] == opponentTurn) || (selected[outsideX][outsideY][0][1] == opponentTurn && selected[outsideX][outsideY][2][1] == playerTurn)){
+						if ((gameState[outsideX][outsideY][0][1] == playerTurn && gameState[outsideX][outsideY][2][1] == opponentTurn) || (gameState[outsideX][outsideY][0][1] == opponentTurn && gameState[outsideX][outsideY][2][1] == playerTurn)){
 							spaceScore--;
 						}
 						//Diagonals
-						if ((selected[outsideX][outsideY][0][0] == playerTurn && selected[outsideX][outsideY][2][2] == opponentTurn) || (selected[outsideX][outsideY][0][0] == opponentTurn && selected[outsideX][outsideY][2][2] == playerTurn)){
+						if ((gameState[outsideX][outsideY][0][0] == playerTurn && gameState[outsideX][outsideY][2][2] == opponentTurn) || (gameState[outsideX][outsideY][0][0] == opponentTurn && gameState[outsideX][outsideY][2][2] == playerTurn)){
 							spaceScore--;
 						}
-						if ((selected[outsideX][outsideY][0][2] == playerTurn && selected[outsideX][outsideY][2][0] == opponentTurn) || (selected[outsideX][outsideY][0][2] == opponentTurn && selected[outsideX][outsideY][2][0] == playerTurn)){
+						if ((gameState[outsideX][outsideY][0][2] == playerTurn && gameState[outsideX][outsideY][2][0] == opponentTurn) || (gameState[outsideX][outsideY][0][2] == opponentTurn && gameState[outsideX][outsideY][2][0] == playerTurn)){
 							spaceScore--;
 						}
 						//Middle column
-						if ((selected[outsideX][outsideY][1][0] == playerTurn && selected[outsideX][outsideY][1][2] == opponentTurn) || (selected[outsideX][outsideY][1][0] == opponentTurn && selected[outsideX][outsideY][1][2] == playerTurn)){
+						if ((gameState[outsideX][outsideY][1][0] == playerTurn && gameState[outsideX][outsideY][1][2] == opponentTurn) || (gameState[outsideX][outsideY][1][0] == opponentTurn && gameState[outsideX][outsideY][1][2] == playerTurn)){
 							spaceScore--;
 						}
 						/*--- Check for winning moves (opponent) (Second highest priority = 75 points) ---*/
 						//Top row
-						if ((selected[outsideX][outsideY][0][1] == opponentTurn && selected[outsideX][outsideY][2][1] == opponentTurn)){
+						if ((gameState[outsideX][outsideY][0][1] == opponentTurn && gameState[outsideX][outsideY][2][1] == opponentTurn)){
 							spaceScore = 75;
 						}
 						//Diagonals
-						if ((selected[outsideX][outsideY][0][0] == opponentTurn && selected[outsideX][outsideY][2][2] == opponentTurn)){
+						if ((gameState[outsideX][outsideY][0][0] == opponentTurn && gameState[outsideX][outsideY][2][2] == opponentTurn)){
 							spaceScore = 75;
 						}
-						if ((selected[outsideX][outsideY][0][2] == opponentTurn && selected[outsideX][outsideY][2][0] == opponentTurn)){
+						if ((gameState[outsideX][outsideY][0][2] == opponentTurn && gameState[outsideX][outsideY][2][0] == opponentTurn)){
 							spaceScore = 75;
 						}
 						//Middlecolumn
-						if ((selected[outsideX][outsideY][0][1] == opponentTurn && selected[outsideX][outsideY][0][2] == opponentTurn)){
+						if ((gameState[outsideX][outsideY][0][1] == opponentTurn && gameState[outsideX][outsideY][0][2] == opponentTurn)){
 							spaceScore = 75;
 						}
 						/*--- Check for winning moves (self) (Highest priority = 100 points) ---*/
 						//Top row
-						if ((selected[outsideX][outsideY][0][1] == playerTurn && selected[outsideX][outsideY][2][1] == playerTurn)){
+						if ((gameState[outsideX][outsideY][0][1] == playerTurn && gameState[outsideX][outsideY][2][1] == playerTurn)){
 							spaceScore = 100;
 						}
 						//Diagonals
-						if ((selected[outsideX][outsideY][0][0] == playerTurn && selected[outsideX][outsideY][2][2] == playerTurn)){
+						if ((gameState[outsideX][outsideY][0][0] == playerTurn && gameState[outsideX][outsideY][2][2] == playerTurn)){
 							spaceScore = 100;
 						}
-						if ((selected[outsideX][outsideY][0][2] == playerTurn && selected[outsideX][outsideY][2][0] == playerTurn)){
+						if ((gameState[outsideX][outsideY][0][2] == playerTurn && gameState[outsideX][outsideY][2][0] == playerTurn)){
 							spaceScore = 100;
 						}
 						//Middle column
-						if ((selected[outsideX][outsideY][0][1] == playerTurn && selected[outsideX][outsideY][0][2] == playerTurn)){
+						if ((gameState[outsideX][outsideY][0][1] == playerTurn && gameState[outsideX][outsideY][0][2] == playerTurn)){
 							spaceScore = 100;
 						}
 						
@@ -439,11 +427,11 @@
 								}
 								//Add points for blocking an opponent, or lining up a move for self
 								else{
-									if(selected[outsideX][outsideY][x][y] == opponentTurn){ //Block
+									if(gameState[outsideX][outsideY][x][y] == opponentTurn){ //Block
 										spaceScore++;
 										//addLog("Blocking an opponent's move: +1. Score = " + spaceScore);
 									}
-									if(selected[outsideX][outsideY][x][y] == playerTurn){ //Set-up
+									if(gameState[outsideX][outsideY][x][y] == playerTurn){ //Set-up
 										spaceScore++;
 										//addLog("Setting up a move for yourself: +1. Score = " + spaceScore);
 									}
@@ -452,29 +440,29 @@
 						}
 						/*--- Check for blocked moves (-1 point)---*/
 						//Bottom row
-						if ((selected[outsideX][outsideY][0][2] == playerTurn && selected[outsideX][outsideY][2][2] == opponentTurn) || (selected[outsideX][outsideY][0][2] == opponentTurn && selected[outsideX][outsideY][2][2] == playerTurn)){
+						if ((gameState[outsideX][outsideY][0][2] == playerTurn && gameState[outsideX][outsideY][2][2] == opponentTurn) || (gameState[outsideX][outsideY][0][2] == opponentTurn && gameState[outsideX][outsideY][2][2] == playerTurn)){
 							spaceScore--;
 						}
 						//Middle column
-						if ((selected[outsideX][outsideY][1][0] == playerTurn && selected[outsideX][outsideY][1][1] == opponentTurn) || (selected[outsideX][outsideY][1][0] == opponentTurn && selected[outsideX][outsideY][1][1] == playerTurn)){
+						if ((gameState[outsideX][outsideY][1][0] == playerTurn && gameState[outsideX][outsideY][1][1] == opponentTurn) || (gameState[outsideX][outsideY][1][0] == opponentTurn && gameState[outsideX][outsideY][1][1] == playerTurn)){
 							spaceScore--;
 						}
 						/*--- Check for winning moves (opponent) (Second highest priority = 75 points) ---*/
 						//Top row
-						if ((selected[outsideX][outsideY][0][2] == opponentTurn && selected[outsideX][outsideY][2][2] == opponentTurn)){
+						if ((gameState[outsideX][outsideY][0][2] == opponentTurn && gameState[outsideX][outsideY][2][2] == opponentTurn)){
 							spaceScore = 75;
 						}
 						//Middle column
-						if ((selected[outsideX][outsideY][1][0] == opponentTurn && selected[outsideX][outsideY][1][1] == opponentTurn)){
+						if ((gameState[outsideX][outsideY][1][0] == opponentTurn && gameState[outsideX][outsideY][1][1] == opponentTurn)){
 							spaceScore = 75;
 						}
 						/*--- Check for winning moves (self) (Highest priority = 100 points) ---*/
 						//Top row
-						if ((selected[outsideX][outsideY][0][2] == playerTurn && selected[outsideX][outsideY][2][2] == playerTurn)){
+						if ((gameState[outsideX][outsideY][0][2] == playerTurn && gameState[outsideX][outsideY][2][2] == playerTurn)){
 							spaceScore = 100;
 						}
 						//Middle column
-						if ((selected[outsideX][outsideY][1][0] == playerTurn && selected[outsideX][outsideY][1][1] == playerTurn)){
+						if ((gameState[outsideX][outsideY][1][0] == playerTurn && gameState[outsideX][outsideY][1][1] == playerTurn)){
 							spaceScore = 100;
 						}
 						
@@ -498,11 +486,11 @@
 								}
 								//Add points for blocking an opponent, or lining up a move for self
 								else{
-									if(selected[outsideX][outsideY][x][y] == opponentTurn){ //Block
+									if(gameState[outsideX][outsideY][x][y] == opponentTurn){ //Block
 										spaceScore++;
 										//addLog("Blocking an opponent's move: +1. Score = " + spaceScore);
 									}
-									if(selected[outsideX][outsideY][x][y] == playerTurn){ //Set-up
+									if(gameState[outsideX][outsideY][x][y] == playerTurn){ //Set-up
 										spaceScore++;
 										//addLog("Setting up a move for yourself: +1. Score = " + spaceScore);
 									}
@@ -511,41 +499,41 @@
 						}
 						/*--- Check for blocked moves (-1 point)---*/
 						//Top row
-						if ((selected[outsideX][outsideY][0][0] == playerTurn && selected[outsideX][outsideY][1][0] == opponentTurn) || (selected[outsideX][outsideY][0][0] == opponentTurn && selected[outsideX][outsideY][1][0] == playerTurn)){
+						if ((gameState[outsideX][outsideY][0][0] == playerTurn && gameState[outsideX][outsideY][1][0] == opponentTurn) || (gameState[outsideX][outsideY][0][0] == opponentTurn && gameState[outsideX][outsideY][1][0] == playerTurn)){
 							spaceScore--;
 						}
 						//diagonal
-						if ((selected[outsideX][outsideY][1][1] == playerTurn && selected[outsideX][outsideY][0][2] == opponentTurn) || (selected[outsideX][outsideY][1][1] == opponentTurn && selected[outsideX][outsideY][0][2] == playerTurn)){
+						if ((gameState[outsideX][outsideY][1][1] == playerTurn && gameState[outsideX][outsideY][0][2] == opponentTurn) || (gameState[outsideX][outsideY][1][1] == opponentTurn && gameState[outsideX][outsideY][0][2] == playerTurn)){
 							spaceScore--;
 						}
 						//Right column
-						if ((selected[outsideX][outsideY][2][1] == playerTurn && selected[outsideX][outsideY][2][2] == opponentTurn) || (selected[outsideX][outsideY][2][1] == opponentTurn && selected[outsideX][outsideY][2][2] == playerTurn)){
+						if ((gameState[outsideX][outsideY][2][1] == playerTurn && gameState[outsideX][outsideY][2][2] == opponentTurn) || (gameState[outsideX][outsideY][2][1] == opponentTurn && gameState[outsideX][outsideY][2][2] == playerTurn)){
 							spaceScore--;
 						}
 						/*--- Check for winning moves (opponent) (Second highest priority = 75 points) ---*/
 						//Top row
-						if ((selected[outsideX][outsideY][0][0] == opponentTurn && selected[outsideX][outsideY][1][0] == opponentTurn)){
+						if ((gameState[outsideX][outsideY][0][0] == opponentTurn && gameState[outsideX][outsideY][1][0] == opponentTurn)){
 							spaceScore = 75;
 						}
 						//diagonal
-						if ((selected[outsideX][outsideY][1][1] == opponentTurn && selected[outsideX][outsideY][0][2] == opponentTurn)){
+						if ((gameState[outsideX][outsideY][1][1] == opponentTurn && gameState[outsideX][outsideY][0][2] == opponentTurn)){
 							spaceScore = 75;
 						}
 						//Right column
-						if ((selected[outsideX][outsideY][2][1] == opponentTurn && selected[outsideX][outsideY][2][2] == opponentTurn)){
+						if ((gameState[outsideX][outsideY][2][1] == opponentTurn && gameState[outsideX][outsideY][2][2] == opponentTurn)){
 							spaceScore = 75;
 						}
 						/*--- Check for winning moves (self) (Highest priority = 100 points) ---*/
 						//Top row
-						if ((selected[outsideX][outsideY][0][0] == playerTurn && selected[outsideX][outsideY][1][0] == playerTurn)){
+						if ((gameState[outsideX][outsideY][0][0] == playerTurn && gameState[outsideX][outsideY][1][0] == playerTurn)){
 							spaceScore = 100;
 						}
 						//diagonal
-						if ((selected[outsideX][outsideY][1][1] == playerTurn && selected[outsideX][outsideY][0][2] == playerTurn)){
+						if ((gameState[outsideX][outsideY][1][1] == playerTurn && gameState[outsideX][outsideY][0][2] == playerTurn)){
 							spaceScore = 100;
 						}
 						//Right column
-						if ((selected[outsideX][outsideY][2][1] == playerTurn && selected[outsideX][outsideY][2][2] == playerTurn)){
+						if ((gameState[outsideX][outsideY][2][1] == playerTurn && gameState[outsideX][outsideY][2][2] == playerTurn)){
 							spaceScore = 100;
 						}
 						
@@ -569,11 +557,11 @@
 								}
 								//Add points for blocking an opponent, or lining up a move for self
 								else{
-									if(selected[outsideX][outsideY][x][y] == opponentTurn){ //Block
+									if(gameState[outsideX][outsideY][x][y] == opponentTurn){ //Block
 										spaceScore++;
 										//addLog("Blocking an opponent's move: +1. Score = " + spaceScore);
 									}
-									if(selected[outsideX][outsideY][x][y] == playerTurn){ //Set-up
+									if(gameState[outsideX][outsideY][x][y] == playerTurn){ //Set-up
 										spaceScore++;
 										//addLog("Setting up a move for yourself: +1. Score = " + spaceScore);
 									}
@@ -582,29 +570,29 @@
 						}
 						/*--- Check for blocked moves (-1 point)---*/
 						//Center row
-						if ((selected[outsideX][outsideY][0][1] == playerTurn && selected[outsideX][outsideY][1][1] == opponentTurn) || (selected[outsideX][outsideY][0][1] == opponentTurn && selected[outsideX][outsideY][1][1] == playerTurn)){
+						if ((gameState[outsideX][outsideY][0][1] == playerTurn && gameState[outsideX][outsideY][1][1] == opponentTurn) || (gameState[outsideX][outsideY][0][1] == opponentTurn && gameState[outsideX][outsideY][1][1] == playerTurn)){
 							spaceScore--;
 						}
 						//Right column
-						if ((selected[outsideX][outsideY][2][0] == playerTurn && selected[outsideX][outsideY][2][2] == opponentTurn) || (selected[outsideX][outsideY][2][0] == opponentTurn && selected[outsideX][outsideY][2][2] == playerTurn)){
+						if ((gameState[outsideX][outsideY][2][0] == playerTurn && gameState[outsideX][outsideY][2][2] == opponentTurn) || (gameState[outsideX][outsideY][2][0] == opponentTurn && gameState[outsideX][outsideY][2][2] == playerTurn)){
 							spaceScore--;
 						}
 						/*--- Check for winning moves (opponent) (Second highest priority = 75 points) ---*/
 						//Center row
-						if ((selected[outsideX][outsideY][0][1] == opponentTurn && selected[outsideX][outsideY][1][1] == opponentTurn)){
+						if ((gameState[outsideX][outsideY][0][1] == opponentTurn && gameState[outsideX][outsideY][1][1] == opponentTurn)){
 							spaceScore = 75;
 						}
 						//Right column
-						if ((selected[outsideX][outsideY][2][0] == opponentTurn && selected[outsideX][outsideY][2][2] == opponentTurn)){
+						if ((gameState[outsideX][outsideY][2][0] == opponentTurn && gameState[outsideX][outsideY][2][2] == opponentTurn)){
 							spaceScore = 75;
 						}
 						/*--- Check for winning moves (self) (Highest priority = 100 points) ---*/
 						//Center row
-						if ((selected[outsideX][outsideY][0][1] == playerTurn && selected[outsideX][outsideY][1][1] == playerTurn)){
+						if ((gameState[outsideX][outsideY][0][1] == playerTurn && gameState[outsideX][outsideY][1][1] == playerTurn)){
 							spaceScore = 100;
 						}
 						//Right column
-						if ((selected[outsideX][outsideY][2][0] == playerTurn && selected[outsideX][outsideY][2][2] == playerTurn)){
+						if ((gameState[outsideX][outsideY][2][0] == playerTurn && gameState[outsideX][outsideY][2][2] == playerTurn)){
 							spaceScore = 100;
 						}
 						
@@ -628,11 +616,11 @@
 								}
 								//Add points for blocking an opponent, or lining up a move for self
 								else{
-									if(selected[outsideX][outsideY][x][y] == opponentTurn){ //Block
+									if(gameState[outsideX][outsideY][x][y] == opponentTurn){ //Block
 										spaceScore++;
 										//addLog("Blocking an opponent's move: +1. Score = " + spaceScore);
 									}
-									if(selected[outsideX][outsideY][x][y] == playerTurn){ //Set-up
+									if(gameState[outsideX][outsideY][x][y] == playerTurn){ //Set-up
 										spaceScore++;
 										//addLog("Setting up a move for yourself: +1. Score = " + spaceScore);
 									}
@@ -641,41 +629,41 @@
 						}
 						/*--- Check for blocked moves (-1 point)---*/
 						//Bottom row
-						if ((selected[outsideX][outsideY][0][2] == playerTurn && selected[outsideX][outsideY][1][2] == opponentTurn) || (selected[outsideX][outsideY][0][2] == opponentTurn && selected[outsideX][outsideY][1][2] == playerTurn)){
+						if ((gameState[outsideX][outsideY][0][2] == playerTurn && gameState[outsideX][outsideY][1][2] == opponentTurn) || (gameState[outsideX][outsideY][0][2] == opponentTurn && gameState[outsideX][outsideY][1][2] == playerTurn)){
 							spaceScore--;
 						}
 						//diagonal
-						if ((selected[outsideX][outsideY][1][1] == playerTurn && selected[outsideX][outsideY][0][0] == opponentTurn) || (selected[outsideX][outsideY][1][1] == opponentTurn && selected[outsideX][outsideY][0][0] == playerTurn)){
+						if ((gameState[outsideX][outsideY][1][1] == playerTurn && gameState[outsideX][outsideY][0][0] == opponentTurn) || (gameState[outsideX][outsideY][1][1] == opponentTurn && gameState[outsideX][outsideY][0][0] == playerTurn)){
 							spaceScore--;
 						}
 						//Right column
-						if ((selected[outsideX][outsideY][2][0] == playerTurn && selected[outsideX][outsideY][2][1] == opponentTurn) || (selected[outsideX][outsideY][2][0] == opponentTurn && selected[outsideX][outsideY][2][1] == playerTurn)){
+						if ((gameState[outsideX][outsideY][2][0] == playerTurn && gameState[outsideX][outsideY][2][1] == opponentTurn) || (gameState[outsideX][outsideY][2][0] == opponentTurn && gameState[outsideX][outsideY][2][1] == playerTurn)){
 							spaceScore--;
 						}
 						/*--- Check for winning moves (opponent) (Second highest priority = 75 points) ---*/
 						//Bottom row
-						if ((selected[outsideX][outsideY][0][2] == opponentTurn && selected[outsideX][outsideY][1][2] == opponentTurn)){
+						if ((gameState[outsideX][outsideY][0][2] == opponentTurn && gameState[outsideX][outsideY][1][2] == opponentTurn)){
 							spaceScore = 75;
 						}
 						//diagonal
-						if ((selected[outsideX][outsideY][1][1] == opponentTurn && selected[outsideX][outsideY][0][0] == opponentTurn)){
+						if ((gameState[outsideX][outsideY][1][1] == opponentTurn && gameState[outsideX][outsideY][0][0] == opponentTurn)){
 							spaceScore = 75;
 						}
 						//Right column
-						if ((selected[outsideX][outsideY][2][0] == opponentTurn && selected[outsideX][outsideY][2][1] == opponentTurn)){
+						if ((gameState[outsideX][outsideY][2][0] == opponentTurn && gameState[outsideX][outsideY][2][1] == opponentTurn)){
 							spaceScore = 75;
 						}
 						/*--- Check for winning moves (self) (Highest priority = 100 points) ---*/
 						//Bottom row
-						if ((selected[outsideX][outsideY][0][2] == playerTurn && selected[outsideX][outsideY][1][2] == playerTurn)){
+						if ((gameState[outsideX][outsideY][0][2] == playerTurn && gameState[outsideX][outsideY][1][2] == playerTurn)){
 							spaceScore = 100;
 						}
 						//diagonal
-						if ((selected[outsideX][outsideY][1][1] == playerTurn && selected[outsideX][outsideY][0][0] == playerTurn)){
+						if ((gameState[outsideX][outsideY][1][1] == playerTurn && gameState[outsideX][outsideY][0][0] == playerTurn)){
 							spaceScore = 100;
 						}
 						//Right column
-						if ((selected[outsideX][outsideY][2][0] == playerTurn && selected[outsideX][outsideY][2][1] == playerTurn)){
+						if ((gameState[outsideX][outsideY][2][0] == playerTurn && gameState[outsideX][outsideY][2][1] == playerTurn)){
 							spaceScore = 100;
 						}
 						
@@ -690,13 +678,77 @@
 	
 	//addLog("Value table: " + valTable);
 	
+	return valTable; //Return the values of all possible moves
+ }
+ 
+ //Player AI: Level 2
+ //Parameters:	outX = X position of next move to be made in large game board
+ //				outY = Y position of next move to be made in large game board
+ //				wonGames = array that holds the win states of the games (0 = not won, 1 = red, 2 = blue)
+ //				playerTurn = which player is the AI currently (1 = red, 2 = blue)
+ function playerAILevel2(outX, outY, wonGames, playerTurn){
+
+	// valtable2Ply = value table holding the sum of the possible moves
+	// startState = array that holds the state of each space on the board (copy of selected)
+	var valTable2Ply = [[0,0,0],
+						[0,0,0],
+						[0,0,0]];
+	var startState = selected;
+	var whichTurn = playerTurn;
+	var flipTurns = false;
+	
+	//Call the calc function once to get initial values
+	var tempTable = calcAI(outX, outY, wonGames, startState, whichTurn);
+	//Check each value. If a move exists (space > 0) then calculate the values for that space
+	for (var xPos = 0, xPos < 3; xPos++){
+		for (var yPos = 0, yPos < 3, yPos++){
+			if (valTable2Ply[xPos][yPos] > 0){
+				var tempState = startState;
+				var tempTable2;
+				var bestOption = tempTable2[0][0]; //Current best option
+				if(whichTurn == 1){
+					tempState[outX][outY][xPos][yPos] = whichTurn;
+					tempTable2 = calcAI(xPos, yPos, wonGames, tempState, whichTurn + 1);
+					//Find best score
+					for (var alpha = 0; alpha < 3; alpha++){
+						for (var beta = 0; beta < 3; beta++){
+							if (bestOption < tempTable2[alpha][beta]){
+								bestOption = tempTable2[alpha][beta];
+							}
+						}
+					}
+					//addLog("Best value = " + bestOption);
+				} else {
+					tempState[outX][outY][xPos][yPos] = whichTurn;
+					tempTable2 = calcAI(xPos, yPos, wonGames, tempState, whichTurn - 1);
+					//Find best score
+					for (var alpha = 0; alpha < 3; alpha++){
+						for (var beta = 0; beta < 3; beta++){
+							if (bestOption < tempTable2[alpha][beta]){
+								bestOption = tempTable2[alpha][beta];
+							}
+						}
+					}
+					//addLog("Best value = " + bestOption);
+				}
+				if(flipTurns == false){
+					valTable2Ply[xPos][yPos] += bestOption;
+					flipTurns = true;
+				} else{
+					valTable2Ply[xPos][yPos] -= bestOption;
+					flipTurns = false;
+				}
+			}
+		}
+	}
+	
 	/*--- Select move from best options ---*/
 	//Find best score
-	var bestOption = valTable[0][0]; //Current best option
+	var bestOption = valTable2Ply[0][0]; //Current best option
 	for (var alpha = 0; alpha < 3; alpha++){
 		for (var beta = 0; beta < 3; beta++){
-			if (bestOption < valTable[alpha][beta]){
-				bestOption = valTable[alpha][beta];
+			if (bestOption < valTable2Ply[alpha][beta]){
+				bestOption = valTable2Ply[alpha][beta];
 			}
 		}
 	}
@@ -707,7 +759,7 @@
 	var optionCounter = 0; //counter used to increment array position
 	for (var ares = 0; ares < 3; ares++){
 		for (var zeus = 0; zeus < 3; zeus++){
-			if (bestOption == valTable[ares][zeus]){
+			if (bestOption == valTable2Ply[ares][zeus]){
 				possibleOptions[optionCounter] = ares;
 				optionCounter++;
 				possibleOptions[optionCounter] = zeus;
@@ -740,8 +792,3 @@
 	}
 	return bestOptionLocation; //Return the best option's location
  }
- 
- 
- 
- 
- 
